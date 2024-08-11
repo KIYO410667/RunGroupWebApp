@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RunGroupWebApp.Data.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace RunGroupWebApp.Models
 {
@@ -7,6 +8,6 @@ namespace RunGroupWebApp.Models
         [Key]
         public int Id { get; set; }
         public string Street { get; set; }
-        public string City { get; set; }
+        public City City { get; set; }
     }
 }

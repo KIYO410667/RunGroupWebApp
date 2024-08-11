@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RunGroupWebApp.Data;
+using RunGroupWebApp.Data.Enum;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
 
@@ -33,7 +34,13 @@ namespace RunGroupWebApp.Repository
 
         public async Task<IEnumerable<Race>> GetAllRacesByCity(string city)
         {
-            return await _context.Races.Include(a => a.Address).Where(c => c.Address.City.Contains(city)).ToListAsync();
+            /*return await _context.Races.Include(a => a.Address).Where(c => c.Address.City.Contains(city)).ToListAsync();*/
+            return await _context.Races
+                         .Include(a => a.Address)
+                         .Where(c => Enum.GetValues(typeof(City))
+                                         .Cast<City>()
+                                         .Any(e => e.ToString().Contains(city) && e == c.Address.City))
+                         .ToListAsync();
         }
 
         public async Task<Race> GetById(int id)

@@ -28,7 +28,7 @@ namespace RunGroopWebApp.Data
                             Address = new Address()
                             {
                                 Street = "123 Main St",
-                                City = "Charlotte",
+                                City = City.台中市,
                             }
                          },
                         new Club()
@@ -40,7 +40,7 @@ namespace RunGroopWebApp.Data
                             Address = new Address()
                             {
                                 Street = "123 Main St",
-                                City = "Charlotte",
+                                City = City.宜蘭縣,
                             }
                         },
                         new Club()
@@ -52,7 +52,7 @@ namespace RunGroopWebApp.Data
                             Address = new Address()
                             {
                                 Street = "123 Main St",
-                                City = "Charlotte",
+                                City = City.台北市,
                             }
                         },
                         new Club()
@@ -64,7 +64,7 @@ namespace RunGroopWebApp.Data
                             Address = new Address()
                             {
                                 Street = "123 Main St",
-                                City = "Michigan",
+                                City = City.高雄市,
                             }
                         }
                     });
@@ -84,7 +84,7 @@ namespace RunGroopWebApp.Data
                             Address = new Address()
                             {
                                 Street = "123 Main St",
-                                City = "Charlotte",
+                                City = City.新竹市,
                             }
                         },
                         new Race()
@@ -97,7 +97,7 @@ namespace RunGroopWebApp.Data
                             Address = new Address()
                             {
                                 Street = "123 Main St",
-                                City = "Charlotte",
+                                City = City.台南市,
                             }
                         }
                     });
