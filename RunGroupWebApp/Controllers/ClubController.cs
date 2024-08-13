@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using RunGroupWebApp.Data;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
+using RunGroupWebApp.Services;
+using RunGroupWebApp.ViewModels;
 
 namespace RunGroupWebApp.Controllers
 {
@@ -10,11 +12,14 @@ namespace RunGroupWebApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IClubRepository _clubRepository;
+        private readonly IAzureBlobService _azureBlobService;
 
-        public ClubController(ApplicationDbContext context, IClubRepository clubRepository)
+        public ClubController(ApplicationDbContext context, IClubRepository clubRepository
+            , IAzureBlobService azureBlobService)
         {
             _context = context;
             _clubRepository = clubRepository;
+            _azureBlobService = azureBlobService;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -35,14 +40,35 @@ namespace RunGroupWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Club club)
+        public async Task<IActionResult> Create(CreateClubViewModel ClubVM)
         {
             if (!ModelState.IsValid)
             {
-                return View(club);
+                return View(ClubVM);
             }
-            _clubRepository.Add(club);
-            return RedirectToAction("Index");
+
+            using (var stream = ClubVM.Image.OpenReadStream())
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ClubVM.Image.FileName);
+                var blobUrl = await _azureBlobService.UploadPhotoAsync(stream, fileName);
+
+                // Save the blobUrl to your database 
+                Club club = new Club
+                {
+                    Title = ClubVM.Title,
+                    Description = ClubVM.Description,
+                    Image = blobUrl,
+                    Address = new Address
+                    {
+                        Street = ClubVM.Address.Street,
+                        City = ClubVM.Address.City
+                    }
+                };
+
+                _clubRepository.Add(club);
+
+                return RedirectToAction("Index", new { message = "Photo uploaded successfully!" });
+            }
         }
     }
 }

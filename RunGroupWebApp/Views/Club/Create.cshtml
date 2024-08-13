@@ -1,5 +1,6 @@
 ﻿@using RunGroupWebApp.Data.Enum
-@model Club
+@using RunGroupWebApp.ViewModels
+@model CreateClubViewModel
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -18,7 +19,7 @@
         <div class="col-md-8 order-md-1">
           <h4 class="mb-3">活動內容</h4>
 
-          <form method="post" asp-action="Create" class="needs-validation">
+          <form method="post" asp-action="Create" class="needs-validation" enctype="multipart/form-data">
             
             <div class="mb-3">
                 <label asp-for="Title">活動名稱</label>
@@ -26,14 +27,14 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
-                    <div class="col-md-5 mb-3">
-                        <label asp-for="ClubCategory">類別</label>
-                        <select asp-for="ClubCategory" asp-items="@Html.GetEnumSelectList<ClubCategory>()"
-                                class="form-control" required>
-                            <option>--選擇--</option>
-                        </select>
-                        <span asp-validation-for="ClubCategory" class="text-danger"></span>
-                    </div>
+            <div class="col-md-5 mb-3">
+                <label asp-for="ClubCategory">類別</label>
+                <select asp-for="ClubCategory" asp-items="@Html.GetEnumSelectList<ClubCategory>()"
+                           class="form-control" required>
+                       <option>--選擇--</option>
+                </select>
+                <span asp-validation-for="ClubCategory" class="text-danger"></span>
+            </div>
             
             <div class="mb-3">
               <label asp-for="Description">活動詳細</label>
@@ -42,8 +43,8 @@
             </div>
 
             <div class="mb-3">
-              <label asp-for="Image">圖片上傳</label>
-              <input asp-for="Image" class="form-control" required>
+              <label asp-for="Image">圖片上傳</label><br/>
+              <input asp-for="Image" type="file" class="form-control" required>
               <span asp-validation-for="Image" class="text-danger"></span>
             </div>
 
