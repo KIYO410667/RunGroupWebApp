@@ -26,5 +26,26 @@ namespace RunGroupWebApp.Services
 
             return blobClient.Uri.ToString();
         }
+
+        public async Task<bool> DeletePhotoByUrlAsync(string photoUrl)
+        {
+            try
+            {
+                var uri = new Uri(photoUrl);
+                var blobName = Path.GetFileName(uri.LocalPath);
+
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+                var blobClient = containerClient.GetBlobClient(blobName);
+
+                var response = await blobClient.DeleteIfExistsAsync();
+                return response.Value; // Returns true if the blob was deleted, false if it didn't exist
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"An error occurred while deleting the photo: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
