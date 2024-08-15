@@ -1,0 +1,58 @@
+﻿@model RunGroupWebApp.Models.Race
+
+@{
+    ViewData["Title"] = "Delete Race";
+}
+
+<h2>Delete Race</h2>
+
+<h3>Are you sure you want to delete this race?</h3>
+<div>
+    <h4>Race詳細</h4>
+    <hr />
+    @if (!string.IsNullOrEmpty(Model.Image))
+    {
+        <div class="form-group">
+            <img src="@Model.Image" alt="Race Image" class="img-thumbnail" style="max-width: 500px;" />
+        </div>
+    }
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            標題
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            描述
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            類別
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RaceCategory)
+        </dd>
+        <dt class="col-sm-2">
+            地址
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address.Street)
+        </dd>
+        <dt class="col-sm-2">
+            縣市
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address.City)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

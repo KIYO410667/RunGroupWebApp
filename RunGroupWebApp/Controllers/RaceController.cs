@@ -146,5 +146,46 @@ namespace RunGroupWebApp.Controllers
             return RedirectToAction("Index");
 
         }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var race = await _raceRepository.GetById(id);
+            if (race == null)
+            {
+                return View("Error");
+            }
+            return View(race);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var race = await _raceRepository.GetById(id);
+            if (race == null)
+            {
+                return View("Error");
+            }
+
+            // Delete the associated image from Azure Blob Storage
+            if (!string.IsNullOrEmpty(race.Image))
+            {
+                try
+                {
+                    await _azureBlobService.DeletePhotoByUrlAsync(race.Image);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception, but continue with the deletion process
+                    // The photo might not exist, or there might be other issues
+                    ModelState.AddModelError(string.Empty, "圖片刪除失敗，但會繼續刪除俱樂部資料");
+                }
+            }
+
+            // Delete the club from the database
+            _raceRepository.Delete(race);
+
+            return RedirectToAction("Index");
+        }
     }
 }

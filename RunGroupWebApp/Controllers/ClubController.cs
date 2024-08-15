@@ -142,12 +142,52 @@ namespace RunGroupWebApp.Controllers
                     userClub.Image = blobUrl; //only change the Image URL
                 }
             }
-            else
-            {
-
-            }
+            
             // 4. Update the model
             _clubRepository.Update(userClub);
+
+            return RedirectToAction("Index");
+        }
+
+
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var club = await _clubRepository.GetById(id);
+            if (club == null)
+            {
+                return View("Error");
+            }
+            return View(club);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var club = await _clubRepository.GetById(id);
+            if (club == null)
+            {
+                return View("Error");
+            }
+
+            // Delete the associated image from Azure Blob Storage
+            if (!string.IsNullOrEmpty(club.Image))
+            {
+                try
+                {
+                    await _azureBlobService.DeletePhotoByUrlAsync(club.Image);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception, but continue with the deletion process
+                    // The photo might not exist, or there might be other issues
+                    ModelState.AddModelError(string.Empty, "圖片刪除失敗，但會繼續刪除俱樂部資料");
+                }
+            }
+
+            // Delete the club from the database
+            _clubRepository.Delete(club);
 
             return RedirectToAction("Index");
         }
