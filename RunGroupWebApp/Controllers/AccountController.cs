@@ -38,6 +38,7 @@ namespace RunGroupWebApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            ViewBag.ErrorMessage = "Invalid login attempt. Please check your email and password.";
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(LoginVM);
         }
