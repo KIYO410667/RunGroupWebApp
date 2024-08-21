@@ -8,7 +8,7 @@ namespace RunGroupWebApp.Models
     {
 
         [ForeignKey("Address")]
-        public int AddressId { get; set; }
+        public int? AddressId { get; set; }
         public Address? Address { get; set; }
         public int? Pace { get; set; }
         public int? Mileage { get; set; }

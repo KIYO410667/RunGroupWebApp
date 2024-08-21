@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RunGroupWebApp.Data;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RunGroupWebApp.Controllers
 {
@@ -41,6 +42,42 @@ namespace RunGroupWebApp.Controllers
             ViewBag.ErrorMessage = "Invalid login attempt. Please check your email and password.";
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(LoginVM);
+        }
+
+        public IActionResult Register()
+        {
+            var registerVM = new RegisterViewModel();
+            return View(registerVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(registerVM);
+            }
+
+            var existingUser = await _userManager.FindByEmailAsync(registerVM.Email);
+            if (existingUser != null)
+            {
+                ViewBag.ErrorMessage = "此電子郵件已註冊，請重試";
+                return View(registerVM);
+            }
+
+            var user = new AppUser { UserName = registerVM.Email, Email = registerVM.Email };
+
+            var result = await _userManager.CreateAsync(user, registerVM.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.User);
+                return RedirectToAction("Index", "Home");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Code);
+            }
+            return View(registerVM);
         }
     }
 }
