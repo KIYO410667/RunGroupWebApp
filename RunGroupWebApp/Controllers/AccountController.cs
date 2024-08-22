@@ -40,7 +40,7 @@ namespace RunGroupWebApp.Controllers
             }
 
             ViewBag.ErrorMessage = "Invalid login attempt. Please check your email and password.";
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.無效的登入嘗試");
             return View(LoginVM);
         }
 
@@ -78,6 +78,12 @@ namespace RunGroupWebApp.Controllers
                 ModelState.AddModelError(string.Empty, error.Code);
             }
             return View(registerVM);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
