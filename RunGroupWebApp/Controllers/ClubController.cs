@@ -5,6 +5,7 @@ using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.Services;
 using RunGroupWebApp.ViewModels;
+using System.Security.Claims;
 
 namespace RunGroupWebApp.Controllers
 {
@@ -13,13 +14,15 @@ namespace RunGroupWebApp.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IClubRepository _clubRepository;
         private readonly IAzureBlobService _azureBlobService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public ClubController(ApplicationDbContext context, IClubRepository clubRepository
-            , IAzureBlobService azureBlobService)
+            , IAzureBlobService azureBlobService, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _clubRepository = clubRepository;
             _azureBlobService = azureBlobService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -36,7 +39,9 @@ namespace RunGroupWebApp.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var clubVM = new CreateClubViewModel { AppUserId = userId };
+            return View(clubVM);
         }
 
         [HttpPost]
@@ -58,6 +63,7 @@ namespace RunGroupWebApp.Controllers
                     Title = ClubVM.Title,
                     Description = ClubVM.Description,
                     Image = blobUrl,
+                    AppUserId = ClubVM.AppUserId,
                     Address = new Address
                     {
                         Street = ClubVM.Address.Street,

@@ -6,6 +6,7 @@ using RunGroupWebApp.Models;
 using RunGroupWebApp.Repository;
 using RunGroupWebApp.Services;
 using RunGroupWebApp.ViewModels;
+using System.Security.Claims;
 
 namespace RunGroupWebApp.Controllers
 {
@@ -14,13 +15,15 @@ namespace RunGroupWebApp.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IRaceRepository _raceRepository;
         private readonly IAzureBlobService _azureBlobService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public RaceController(ApplicationDbContext context, IRaceRepository raceRepository
-            , IAzureBlobService azureBlobService)
+            , IAzureBlobService azureBlobService, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _raceRepository = raceRepository;
             _azureBlobService = azureBlobService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()
         {
@@ -36,7 +39,9 @@ namespace RunGroupWebApp.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var raceVM = new CreateRaceViewModel { AppUserId = userId };
+            return View(raceVM);
         }
 
         [HttpPost]
@@ -57,6 +62,7 @@ namespace RunGroupWebApp.Controllers
                     Title = RaceVM.Title,
                     Description = RaceVM.Description,
                     Image = blobUrl,
+                    AppUserId = RaceVM.AppUserId,
                     Address = new Address
                     {
                         Street = RaceVM.Address.Street,

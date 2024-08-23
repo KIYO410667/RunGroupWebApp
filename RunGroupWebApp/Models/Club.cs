@@ -18,8 +18,8 @@ namespace RunGroupWebApp.Models
         public Address? Address { get; set; }
 
         [ForeignKey("AppUser")]
-        public string? OrganizerId { get; set; }
-        public AppUser? Organizer { get; set; }
+        public string? AppUserId { get; set; }
+        public AppUser? AppUser { get; set; }
 
         //public ICollection<AppUser> Participants { get; set; }
     }
