@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunGroupWebApp.Data;
 
@@ -11,9 +12,11 @@ using RunGroupWebApp.Data;
 namespace RunGroupWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240825211946_AddProfilePhotoToAppUser")]
+    partial class AddProfilePhotoToAppUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,10 +166,11 @@ namespace RunGroupWebApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("City")
+                    b.Property<int>("City")
                         .HasColumnType("int");
 
                     b.Property<string>("Street")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -183,9 +187,6 @@ namespace RunGroupWebApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("City")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -229,12 +230,10 @@ namespace RunGroupWebApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfilePhotoUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")

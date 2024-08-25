@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RunGroupWebApp.Data;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
@@ -34,6 +36,11 @@ namespace RunGroupWebApp.Repository
             return await _context.Races
                                  .Where(a => a.AppUser.Id == userId)
                                  .ToListAsync();
+        }
+
+        public async Task<AppUser> GetUserById(string id)
+        {
+            return await _context.Users.FindAsync(id);
         }
     }
 }

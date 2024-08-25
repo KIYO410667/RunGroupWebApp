@@ -13,7 +13,7 @@ namespace RunGroupWebApp.Controllers
         {
             _userRepository = userRepository;
         }
-
+        [HttpGet("users")]
         public async Task<IActionResult> Index()
         {
             var results = await _userRepository.GetAllUser();
@@ -32,7 +32,7 @@ namespace RunGroupWebApp.Controllers
             return View(userVms);
         }
 
-        public async Task<IActionResult> Detail(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             var result = await _userRepository.GetUserById(id);
             var userVM = new UserViewModel()

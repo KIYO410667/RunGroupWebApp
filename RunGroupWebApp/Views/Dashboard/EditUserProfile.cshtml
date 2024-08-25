@@ -1,0 +1,68 @@
+﻿@using RunGroupWebApp.Data.Enum
+@using RunGroupWebApp.ViewModels
+@model EditUserProfileViewModel
+
+<body class="bg-light">
+
+    <div class="container">
+        <div class="py-5 text-center">
+            @* <img class="d-block mx-auto mb-4" src="@Model.URL" alt="" width="350" height="420"> *@
+            <h2>修改個人頁</h2>
+            <p class="lead">修改個人相關資訊</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0 " src="@Model.ProfilePhotoUrl" alt="..." /></div>
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">個人資訊</h4>
+              
+                <form method="post" asp-action="EditUserProfile" class="needs-validation" enctype="multipart/form-data">
+                    <input type="hidden" value="Id" id="Id" />
+                    <div class="mb-3">
+                        <label asp-for="UserName">名稱</label>
+                        <input asp-for="UserName" class="form-control" placeholder="個人名稱" required>
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Pace">配速</label>
+                        <input asp-for="Pace" class="form-control" placeholder="例如：5km/h" required>
+                        <span asp-validation-for="Pace" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Mileage">里程數</label>
+                        <input asp-for="Mileage" class="form-control" placeholder="例如：200km" required>
+                        <span asp-validation-for="Mileage" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ProfilePhotoFile">頭像上傳</label><br />
+                        <input asp-for="ProfilePhotoFile" type="file" class="form-control">
+                        <span asp-validation-for="ProfilePhotoFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Street">地址</label>
+                        <input asp-for="Street" class="form-control" placeholder="西屯路二段" required>
+                        <span asp-validation-for="Street" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="col-md-5 mb-3">
+                        <label asp-for="City">縣市</label>
+                        <select asp-for="City" asp-items="@Html.GetEnumSelectList<City>()"
+                                class="form-control" placeholder="--選擇--" required>
+                            <option>--選擇--</option>
+                        </select>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+
+
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
