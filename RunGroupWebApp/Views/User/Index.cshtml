@@ -7,35 +7,31 @@
             <div class="col">
                 <table class="table table-hover align-items-center table-borderless">
                     <tbody>
+                        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                         @foreach (var user in Model)
                         {
-                            <tr class="bg-white">
-                                <th scope="row">
-                                    <div class="media align-items-center">
-                                        @* <img alt="Image profile avatar" src="@user.ProfileImageUrl" class="avatar"> *@
-                                        <div class="media-body">
-                                            <span class="h6 mb-0">@user.UserName</span>
+                            <div class="col mb-5">
+                                <div class="card h-100">
+                                    <!-- Product image-->
+                                    <img class="card-img-top" src="@user.ProfilePhotoUrl" alt="..." />
+                                    <!-- Product details-->
+                                    <div class="card-body p-4">
+                                        <div class="text-center">
+                                            <!-- Product name-->
+                                            <h5 class="fw-bolder">@user.UserName</h5>
+                                            <!-- Product price-->
+                                            <p>配速：@user.Pace km/h </p>
+                                            <p>里程數：@user.Mileage km</p>
                                         </div>
                                     </div>
-                                </th>
-                                <td>
-                                    <a class="btn btn-outline-primary" asp-controller="User" asp-action="Detail" asp-route-id="@user.Id">
-                                        View Profile
-                                    </a>
-                                </td>
-
-                                @{
-                                    var mileage = user.Mileage == null ? "?" : user.Mileage.ToString();
-                                    var pace = user.Pace == null ? "?" : user.Mileage.ToString();
-                                }
-                                <td>@mileage mile at @pace mph</td>
-                                @* <td><i class="icon-location"></i> @user.Location</td> *@
-                            </tr>
-                            <tr class="table-divider">
-                                <th></th>
-                                <td></td>
-                            </tr>
+                                    <!-- Product actions-->
+                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" asp-controller="User" asp-action="Detail" asp-route-id="@user.Id">詳細</a></div>
+                                    </div>
+                                </div>
+                            </div>  
                         }
+                        </div>
                     </tbody>
                 </table>
             </div>

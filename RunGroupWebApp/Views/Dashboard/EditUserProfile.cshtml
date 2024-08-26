@@ -17,7 +17,7 @@
                 <h4 class="mb-3">個人資訊</h4>
               
                 <form method="post" asp-action="EditUserProfile" class="needs-validation" enctype="multipart/form-data">
-                    <input type="hidden" value="Id" id="Id" />
+                    <input type="hidden" value="Id" asp-for="Id" />
                     <div class="mb-3">
                         <label asp-for="UserName">名稱</label>
                         <input asp-for="UserName" class="form-control" placeholder="個人名稱" required>

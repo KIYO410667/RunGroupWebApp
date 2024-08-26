@@ -26,13 +26,14 @@ namespace RunGroupWebApp.Controllers
                     UserName = user.UserName,
                     Mileage = user.Mileage,
                     Pace = user.Pace,
+                    ProfilePhotoUrl = user.ProfilePhotoUrl,
                 };
                 userVms.Add(userVM);
             }
             return View(userVms);
         }
 
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Detail(string id)
         {
             var result = await _userRepository.GetUserById(id);
             var userVM = new UserViewModel()
@@ -41,7 +42,8 @@ namespace RunGroupWebApp.Controllers
                 UserName = result.UserName,
                 Mileage = result.Mileage,
                 Pace = result.Pace,
-            };
+                ProfilePhotoUrl = result.ProfilePhotoUrl,
+    };
             return View(userVM);
         }
 

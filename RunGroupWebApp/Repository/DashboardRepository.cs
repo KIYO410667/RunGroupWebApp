@@ -42,5 +42,17 @@ namespace RunGroupWebApp.Repository
         {
             return await _context.Users.FindAsync(id);
         }
+
+        public bool Save()
+        {
+            var result = _context.SaveChanges();
+            return result > 0 ? true : false;
+        }
+
+        public bool Update(AppUser user)
+        {
+            _context.Users.Update(user);
+            return Save();
+        }
     }
 }
