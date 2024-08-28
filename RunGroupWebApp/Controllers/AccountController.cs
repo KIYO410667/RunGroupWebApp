@@ -27,22 +27,38 @@ namespace RunGroupWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel LoginVM)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
-                return View(LoginVM); 
+                return View(LoginVM);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(LoginVM.Email, LoginVM.Password, isPersistent: false, lockoutOnFailure: false);
+            // 查找用户
+            var user = await _userManager.FindByEmailAsync(LoginVM.Email);
 
-            if (result.Succeeded)
+            if (user == null)
             {
-                return RedirectToAction("Index", "Home");
+                // 用户不存在，返回错误信息
+                ViewBag.ErrorMessage = "Invalid login attempt. Email not found.";
+                ModelState.AddModelError(string.Empty, "Invalid login attempt. 無效的登入嘗試");
+                return View(LoginVM);
             }
 
-            ViewBag.ErrorMessage = "Invalid login attempt. Please check your email and password.";
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.無效的登入嘗試");
-            return View(LoginVM);
+            // 验证密码
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, LoginVM.Password);
+
+            if (!passwordCheck)
+            {
+                // 密码不正确，返回错误信息
+                ViewBag.ErrorMessage = "Invalid login attempt. Incorrect password.";
+                ModelState.AddModelError(string.Empty, "Invalid login attempt. 無效的登入嘗試");
+                return View(LoginVM);
+            }
+
+            // 如果Email和密码都正确，则登录用户
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return RedirectToAction("Index", "Home");
         }
+
 
         public IActionResult Register()
         {

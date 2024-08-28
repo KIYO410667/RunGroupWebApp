@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RunGroupWebApp.Data;
+using RunGroupWebApp.Data.Enum;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.Services;
@@ -33,7 +34,24 @@ namespace RunGroupWebApp.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-            Club club = await _clubRepository.GetById(id);
+            Club club = await _clubRepository.GetParticipantsById(id);
+            if(club == null) return View("Error");
+            //ClubViewModel clubVM = new ClubViewModel()
+            //{
+            //    Id = club.Id,
+            //    Title = club.Title,
+            //    Image = club.Image,
+            //    ClubCategory = club.ClubCategory,
+            //    AddressId = club.AddressId,
+            //    Address = new Address()
+            //    {
+            //        City = club.Address.City,
+            //        Street = club.Address.Street,
+            //    }
+            //    AppUserId = club.AppUserId,
+            //    AppUser = club.AppUser,
+            //    AppUserClubs
+            //};
             return View(club);
         }
 

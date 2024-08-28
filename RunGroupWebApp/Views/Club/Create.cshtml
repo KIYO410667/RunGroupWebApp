@@ -31,7 +31,7 @@
                 <label asp-for="ClubCategory">類別</label>
                 <select asp-for="ClubCategory" asp-items="@Html.GetEnumSelectList<ClubCategory>()"
                            class="form-control" required>
-                       <option>--選擇--</option>
+                       <option value="">--選擇--</option>
                 </select>
                 <span asp-validation-for="ClubCategory" class="text-danger"></span>
             </div>

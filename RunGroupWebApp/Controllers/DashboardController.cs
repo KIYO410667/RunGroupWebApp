@@ -44,6 +44,7 @@ namespace RunGroupWebApp.Controllers
             var editUserVM = new EditUserProfileViewModel
             {
                 Id = userId,
+                UserName = currentUser.UserName,
                 Pace = currentUser.Pace,
                 Mileage = currentUser.Mileage,
                 ProfilePhotoUrl = currentUser.ProfilePhotoUrl,
@@ -88,6 +89,7 @@ namespace RunGroupWebApp.Controllers
             currentUser.Mileage = editUserVM.Mileage;
             currentUser.City = editUserVM.City;
             currentUser.Street = editUserVM.Street;
+            currentUser.UserName = editUserVM.UserName;
 
             //4. Handle the new image upload
             if (editUserVM.ProfilePhotoFile != null)

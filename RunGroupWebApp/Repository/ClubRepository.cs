@@ -59,5 +59,15 @@ namespace RunGroupWebApp.Repository
             _context.Update(club);
             return Save();
         }
+
+        public async Task<Club> GetParticipantsById(int id)
+        {
+            return await _context.Clubs
+                .Include(a => a.Address)
+                .Include(a => a.AppUser)
+                .Include(c => c.AppUserClubs)
+                    .ThenInclude(uc => uc.AppUser)
+                .FirstOrDefaultAsync(i => i.Id == id);
+        }
     }
 }

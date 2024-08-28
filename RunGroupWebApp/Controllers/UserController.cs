@@ -13,6 +13,7 @@ namespace RunGroupWebApp.Controllers
         {
             _userRepository = userRepository;
         }
+
         [HttpGet("users")]
         public async Task<IActionResult> Index()
         {
