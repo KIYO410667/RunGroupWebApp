@@ -18,7 +18,7 @@ namespace RunGroupWebApp.Models
         public string? Street { get; set; }
         public City? City { get; set; }
 
-        //public ICollection<Club> OrganizedEvents { get; set; }
-        //public ICollection<Club> ParticipatingEvents { get; set; }
+        public ICollection<Club> CreatedClubs { get; set; }
+        public ICollection<AppUserClub> AppUserClubs { get; set; }
     }
 }

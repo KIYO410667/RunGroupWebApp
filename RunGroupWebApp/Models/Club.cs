@@ -21,6 +21,6 @@ namespace RunGroupWebApp.Models
         public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
 
-        //public ICollection<AppUser> Participants { get; set; }
+        public ICollection<AppUserClub> AppUserClubs { get; set; }
     }
 }
