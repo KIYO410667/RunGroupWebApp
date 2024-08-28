@@ -38,7 +38,7 @@ namespace RunGroupWebApp.Repository
         public async Task<List<Club>> GetAllClubs()
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return await _context.AppUserClubs
+            return await _context.AppUserClubs.Include(auc => auc.Club)
                             .Where(auc => auc.AppUserId == userId)
                             .Select(auc => auc.Club)
                             .ToListAsync();
@@ -53,9 +53,12 @@ namespace RunGroupWebApp.Repository
                 .FirstOrDefaultAsync(m => m.AppUserId == userId && m.ClubId == clubId);
         }
 
-        //public Task<List<Club>> GetAllUsers()
-        //{
-
-        //}
+        public async Task<List<AppUser>> GetAllUsers(int clubId)
+        {
+            return await _context.AppUserClubs.Include(auc => auc.AppUser)
+                                .Where(c => c.ClubId == clubId)
+                                .Select(auc => auc.AppUser)
+                                .ToListAsync();
+        }
     }
 }

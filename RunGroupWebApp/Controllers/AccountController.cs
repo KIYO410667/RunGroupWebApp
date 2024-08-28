@@ -38,7 +38,7 @@ namespace RunGroupWebApp.Controllers
             if (user == null)
             {
                 // 用户不存在，返回错误信息
-                ViewBag.ErrorMessage = "Invalid login attempt. Email not found.";
+                //ViewBag.ErrorMessage = "Invalid login attempt. Email not found.";
                 ModelState.AddModelError(string.Empty, "Invalid login attempt. 無效的登入嘗試");
                 return View(LoginVM);
             }
@@ -49,7 +49,7 @@ namespace RunGroupWebApp.Controllers
             if (!passwordCheck)
             {
                 // 密码不正确，返回错误信息
-                ViewBag.ErrorMessage = "Invalid login attempt. Incorrect password.";
+                //ViewBag.ErrorMessage = "Invalid login attempt. Incorrect password.";
                 ModelState.AddModelError(string.Empty, "Invalid login attempt. 無效的登入嘗試");
                 return View(LoginVM);
             }
@@ -89,6 +89,7 @@ namespace RunGroupWebApp.Controllers
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
                 return RedirectToAction("Index", "Home");
             }
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Code);

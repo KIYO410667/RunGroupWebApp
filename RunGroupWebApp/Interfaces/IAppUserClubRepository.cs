@@ -6,7 +6,7 @@ namespace RunGroupWebApp.Interfaces
     {
         Task<List<Club>> GetAllClubs();
         Task<AppUserClub> GetByIdAsync(int clubId);
-        //Task<List<Club>> GetAllUsers();
+        Task<List<AppUser>> GetAllUsers(int clubId);
 
         bool Add(AppUserClub userClub);
         bool Save();

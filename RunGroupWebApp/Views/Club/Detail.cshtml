@@ -1,4 +1,5 @@
-﻿@model Club
+﻿@using RunGroupWebApp.ViewModels
+@model ClubWithUsersViewModel
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -48,16 +49,16 @@
         <section class="py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="row gx-4 gx-lg-5 align-items-center">
-                    <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="@Model.Image" alt="..." /></div>
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="@Model.Club.Image" alt="..." /></div>
                     <div class="col-md-6">
                         <div class="small mb-1">還沒想好</div>
-                        <h1 class="display-5 fw-bolder">@Model.Title</h1>
+                        <h1 class="display-5 fw-bolder">@Model.Club.Title</h1>
                         <div class="fs-5 mb-5">
-                            <span>@Model.Address.City</span>
+                        <span>@Model.Club.Address.City</span>
                         </div>
-                        <p class="lead">@Model.Description</p>
+                    <p class="lead">@Model.Club.Description</p>
                         <div class="d-flex">
-                            <form asp-controller="AppUserClub" asp-action="Add" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        <form asp-controller="AppUserClub" asp-action="Add" asp-route-id="@Model.Club.Id" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-outline-dark flex-shrink-0">
                                     <i class="bi bi-person-plus-fill"></i>
                                     參加
@@ -73,50 +74,54 @@
             <div class="container px-4 px-lg-5 mt-5">
                 <h2 class="fw-bolder mb-4">已參加用戶</h2>
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    
-                    @* <div class="col mb-5">
+
+                @if (Model.Club.AppUser != null)
+                {
+                    <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Sale badge-->
                             <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">發起人</div>
                             <!-- Product image-->
-                            <img class="card-img-top" src="@Model.AppUser.ProfilePhotoUrl" alt="..." />
+                            <img class="card-img-top" src="@Model.Club.AppUser.ProfilePhotoUrl" alt="..." />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <h5 class="fw-bolder">@Model.AppUser.Username</h5>
+                                    <h5 class="fw-bolder">@Model.Club.AppUser.UserName</h5>
                                     <!-- Product price-->
                                 </div>
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a type="button" class="btn btn-outline-dark mt-auto" asp-controller="User" asp-action="Detail">詳細</a></div>
+                                <div class="text-center"><a type="button" class="btn btn-outline-dark mt-auto" asp-controller="User" asp-action="Detail" asp-route-id="@Model.Club.AppUser.Id">詳細</a></div>
                             </div>
                         </div>
                     </div>
+                }
+               
 
-                @foreach (var user in Model)
+                @foreach (var user in Model.AppUsers)
                 {
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <img class="card-img-top" src="@user.ProfilePhotoUrl" alt="..." />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <h5 class="fw-bolder">Fancy Product</h5>
+                                    <h5 class="fw-bolder">@user.UserName</h5>
                                     <!-- Product price-->
-                                    $40.00 - $80.00
+                                    @* $40.00 - $80.00 *@
                                 </div>
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" asp-controller="User" asp-action="Detail" asp-route-id="@user.Id">詳細</a></div>
                             </div>
                         </div>
                     </div>
-                } *@
+                } 
                 </div>
             </div>
         </section>

@@ -48,6 +48,10 @@ namespace RunGroupWebApp.Repository
             return await _context.Clubs.Include(a => a.Address).FirstOrDefaultAsync(i => i.Id == id);
         }
 
+        public async Task<Club> GetClubWithAppUserById(int id)
+        {
+            return await _context.Clubs.Include(a => a.Address).Include(a => a.AppUser).FirstOrDefaultAsync(i => i.Id == id);
+        }
         public bool Save()
         {
             var result = _context.SaveChanges();
@@ -58,16 +62,6 @@ namespace RunGroupWebApp.Repository
         {
             _context.Update(club);
             return Save();
-        }
-
-        public async Task<Club> GetParticipantsById(int id)
-        {
-            return await _context.Clubs
-                .Include(a => a.Address)
-                .Include(a => a.AppUser)
-                .Include(c => c.AppUserClubs)
-                    .ThenInclude(uc => uc.AppUser)
-                .FirstOrDefaultAsync(i => i.Id == id);
         }
     }
 }

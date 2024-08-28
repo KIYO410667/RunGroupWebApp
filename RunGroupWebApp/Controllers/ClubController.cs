@@ -4,6 +4,7 @@ using RunGroupWebApp.Data;
 using RunGroupWebApp.Data.Enum;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
+using RunGroupWebApp.Repository;
 using RunGroupWebApp.Services;
 using RunGroupWebApp.ViewModels;
 using System.Security.Claims;
@@ -12,18 +13,18 @@ namespace RunGroupWebApp.Controllers
 {
     public class ClubController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IClubRepository _clubRepository;
         private readonly IAzureBlobService _azureBlobService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAppUserClubRepository _appUserClubRepository;
 
-        public ClubController(ApplicationDbContext context, IClubRepository clubRepository
-            , IAzureBlobService azureBlobService, IHttpContextAccessor httpContextAccessor)
+        public ClubController(IClubRepository clubRepository, IAzureBlobService azureBlobService,
+            IHttpContextAccessor httpContextAccessor, IAppUserClubRepository appUserClubRepository)
         {
-            _context = context;
             _clubRepository = clubRepository;
             _azureBlobService = azureBlobService;
             _httpContextAccessor = httpContextAccessor;
+            _appUserClubRepository = appUserClubRepository;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -34,25 +35,15 @@ namespace RunGroupWebApp.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-            Club club = await _clubRepository.GetParticipantsById(id);
+            Club club = await _clubRepository.GetClubWithAppUserById(id);
             if(club == null) return View("Error");
-            //ClubViewModel clubVM = new ClubViewModel()
-            //{
-            //    Id = club.Id,
-            //    Title = club.Title,
-            //    Image = club.Image,
-            //    ClubCategory = club.ClubCategory,
-            //    AddressId = club.AddressId,
-            //    Address = new Address()
-            //    {
-            //        City = club.Address.City,
-            //        Street = club.Address.Street,
-            //    }
-            //    AppUserId = club.AppUserId,
-            //    AppUser = club.AppUser,
-            //    AppUserClubs
-            //};
-            return View(club);
+            List<AppUser> users = await _appUserClubRepository.GetAllUsers(id);
+            ClubWithUsersViewModel clubUsers = new ClubWithUsersViewModel()
+            {
+                Club = club,
+                AppUsers = users
+            };
+            return View(clubUsers);
         }
 
         public IActionResult Create()
