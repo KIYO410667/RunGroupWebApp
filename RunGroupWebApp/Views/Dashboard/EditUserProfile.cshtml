@@ -2,11 +2,71 @@
 @using RunGroupWebApp.ViewModels
 @model EditUserProfileViewModel
 
-<body class="bg-light">
+
+<head>
+    <link rel="stylesheet" href="~/css/profile-edit.css" />
+</head>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10 form-container">
+            <form method="post" asp-action="EditUserProfile" class="needs-validation" enctype="multipart/form-data">
+                <div class="col">
+                    <div class="col-md-4 mb-4">
+                        <img id="profileImage" class="img-fluid profile-img mb-3" src="@Model.ProfilePhotoUrl" alt="Profile Photo" />
+                        <div class="text-center">
+                            <label for="ProfilePhotoFile" class="btn btn-outline-primary">
+                                更換頭像
+                                <input id="ProfilePhotoFile" name="ProfilePhotoFile" type="file" class="d-none" accept="image/*">
+                            </label>
+                            <span asp-validation-for="ProfilePhotoFile" class="text-danger d-block mt-2"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="mb-3">個人資訊</h4>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">名稱</label>
+                            <input asp-for="UserName" class="form-control" placeholder="個人名稱" required>
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Pace" class="form-label">配速</label>
+                            <input asp-for="Pace" class="form-control" placeholder="例如：5km/h" required>
+                            <span asp-validation-for="Pace" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Mileage" class="form-label">里程數</label>
+                            <input asp-for="Mileage" class="form-control" placeholder="例如：200km" required>
+                            <span asp-validation-for="Mileage" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Street" class="form-label">地址</label>
+                            <input asp-for="Street" class="form-control" placeholder="西屯路二段" required>
+                            <span asp-validation-for="Street" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="City" class="form-label">縣市</label>
+                            <select asp-for="City" asp-items="@Html.GetEnumSelectList<City>()"
+                                    class="form-select" required>
+                                <option value="">--選擇--</option>
+                            </select>
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                        <hr class="mb-4">
+                        <button class="btn btn-primary btn-lg w-100" type="submit">提交修改</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/js/profile-edit.js"></script>
+
+@* <body class="bg-light">
 
     <div class="container">
         <div class="py-5 text-center">
-            @* <img class="d-block mx-auto mb-4" src="@Model.URL" alt="" width="350" height="420"> *@
+            <img class="d-block mx-auto mb-4" src="@Model.URL" alt="" width="350" height="420">
             <h2>修改個人頁</h2>
             <p class="lead">修改個人相關資訊</p>
         </div>
@@ -15,7 +75,7 @@
             <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0 " src="@Model.ProfilePhotoUrl" alt="..." /></div>
             <div class="col-md-8 order-md-1">
                 <h4 class="mb-3">個人資訊</h4>
-              
+
                 <form method="post" asp-action="EditUserProfile" class="needs-validation" enctype="multipart/form-data">
                     <input type="hidden" value="Id" asp-for="Id" />
                     <div class="mb-3">
@@ -66,3 +126,4 @@
         </div>
     </div>
 </body>
+ *@
