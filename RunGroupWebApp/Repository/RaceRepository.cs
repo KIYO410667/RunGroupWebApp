@@ -29,7 +29,7 @@ namespace RunGroupWebApp.Repository
 
         public async Task<IEnumerable<Race>> GetAll()
         {
-            return await _context.Races.ToListAsync();
+            return await _context.Races.Include(a => a.AppUser).ToListAsync();
         }
 
         public async Task<IEnumerable<Race>> GetAllRacesByCity(string city)
