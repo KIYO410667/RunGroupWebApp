@@ -5,8 +5,8 @@
 }
 
 .container {
-    padding-left: 5rem; /* 增加左侧内边距 */
-    padding-right: 5rem; /* 增加右侧内边距 */
+    padding-left: 5rem;
+    padding-right: 5rem;
 }
 
 body {
@@ -24,7 +24,7 @@ body {
 .card {
     border-radius: 20px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
-    overflow: hidden; /* 隐藏超出的内容 */
+    overflow: hidden;
 }
 
 .card-body {
