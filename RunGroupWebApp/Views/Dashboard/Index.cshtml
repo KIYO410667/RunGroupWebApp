@@ -3,244 +3,82 @@
 
 @model RunGroupWebApp.ViewModels.DashboardViewModel
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
-    <link href="./css/club_index.css" rel="stylesheet">
-    <style>
-        .tab-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .tab-button {
-            background-color: #f8f9fa;
-            border: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s;
-        }
-        .tab-button.active {
-            background-color: #007bff;
-            color: white;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-
-    <section class="h-100 gradient-custom-2">
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col col-lg-9 col-xl-10">
-            <div class="card">
-              <div class="rounded-top text-white d-flex flex-row">
-                <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                    alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                    style="width: 150px; z-index: 1">
-                  <a asp-area="" asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-outline-dark" style="z-index: 1;">
-                    Edit profile
-                  </a>
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
+<div class="gradient-custom-2 ">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center"> 
+            <div class="col-md-10">
+                <div class="card">
+                <div class="rounded-top text-white d-flex flex-row profile-header">
+                    <div class="d-flex flex-column profile-container" style="z-index: 1">
+                        <img src="@Model.appUser.ProfilePhotoUrl" alt="Profile Image" class="img-fluid mt-4 mb-1 profile-image" >
+                        <a asp-area="" asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-outline-light edit-profile-btn">Edit profile</a>
+                    </div>
+                    <div class="ms-3" style="margin-top: 130px;">
+                        <h5 class="profile-username">@Model.appUser?.UserName</h5>
+                        <p>@Model.appUser?.City</p>
+                    </div>
                 </div>
-                <div class="ms-3" style="margin-top: 130px;">
-                  @* <h5>@Model.UserName</h5>
-                  <p>@Model.City</p> *@
-                </div>
-              </div>
-              <div class="p-4 text-black" style="background-color: #f8f9fa;">
-                <div class="d-flex justify-content-end text-center py-1">
-                  <div>
-                    <p class="mb-1 h5">@Model.Races.Count()</p>
-                    <p class="small text-muted mb-0">Races</p>
-                  </div>
-                  <div class="px-3">
-                    <p class="mb-1 h5">@Model.Clubs.Count()</p>
-                    <p class="small text-muted mb-0">Clubs</p>
-                  </div>
-                  <div>
-                    @* <p class="mb-1 h5">@Model.TotalMileage</p> *@
-                    <p class="small text-muted mb-0">Total Mileage</p>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body p-4 text-black">
-                <div class="mb-5">
-                  <p class="lead fw-normal mb-1">About</p>
-                  <div class="p-4" style="background-color: #f8f9fa;">
-                    @* <p class="font-italic mb-1">Pace: @Model.Pace</p>
-                    <p class="font-italic mb-1">Mileage per week: @Model.MileagePerWeek</p>
-                    <p class="font-italic mb-0">@Model.Bio</p> *@
-                  </div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                  <p class="lead fw-normal mb-0">Dashboard</p>
-                  <div>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Club" asp-action="Create">Create Club</a>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Race" asp-action="Create">Create Race</a>
-                  </div>
-                </div>
-                <div class="tab-buttons">
-                  <button class="tab-button active" onclick="openTab(event, 'races')">Your Races</button>
-                  <button class="tab-button" onclick="openTab(event, 'clubs')">Your Clubs</button>
-                </div>
-                <div id="races" class="tab-content active">
-                    <div class="row row-cols-1 row-cols-md-2 g-4 py-5">
-                    @foreach (var item in Model.Races)
-                    {
-                        <div class="col">
-                            <div class="card">
-                                <img src="@item.Image" class="card-img-top mt-2" alt="...">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title mb-0">@item.Title</h5>
-                                        <small class="text-muted">@item.RaceCategory</small>
-                                    </div>
-                                    <p class="card-text mt-3">
-                                        @item.Description
-                                    </p>
-                                    <div class="mb-2 d-flex justify-content-end">
-                                        <a asp-controller="Race" asp-action="Detail" asp-route-id="@item.Id" type="button" class="button-4">View</a>
-                                        @if (SignInManager.IsSignedIn(User))
-                                        {
-                                            <a asp-controller="Race" asp-action="Edit" asp-route-id="@item.Id" type="button" class="button-4">Edit</a>
-                                            <a asp-controller="Race" asp-action="Delete" asp-route-id="@item.Id" type="button" class="button-4">Delete</a>
-                                        }
-                                    </div>
-                                </div>
+                    <div class="p-4 text-black bg-light">
+                            
+                        <div class="d-flex justify-content-end text-center py-1">
+                            <div class="px-3">
+                                <p class="mb-1 h5">@Model.Clubs?.Count()</p>
+                                <p class="small text-muted mb-0">Clubs</p>
+                            </div>
+                            @* <div class="px-3">
+                                <p class="mb-1 h5">@Model.appUser?.City</p>
+                                <p class="small text-muted mb-0">Location</p>
+                            </div> *@
+                        </div>
+                    </div>
+                    <div class="card-body p-4 text-black">
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">About Me</p>
+                            <div class="p-4 bg-light rounded">
+                                <p class="font-italic mb-1">@Model.appUser?.City</p>
                             </div>
                         </div>
-                    }
-                  </div>
-                </div>
-                <div id="clubs" class="tab-content">
-                  <div class="row row-cols-1 row-cols-md-2 g-4 py-5">
-                    @foreach (var item in Model.Clubs)
-                    {
-                        <div class="col">
-                            <div class="card">
-                                <img src="@item.Image" class="card-img-top mt-2" alt="...">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title mb-0">@item.Title</h5>
-                                        <small class="text-muted">@item.ClubCategory</small>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <p class="lead fw-normal mb-0">Dashboard</p>
+                            <a class="btn btn-primary" asp-area="" asp-controller="Club" asp-action="Create">Create Club</a>
+                        </div>
+                        <div id="clubs" class="tab-content">
+                            <div class="row row-cols-1 row-cols-md-2 g-4">
+                                @foreach (var item in Model.Clubs)
+                                {
+                                    <div class="col">
+                                        <div class="card club-card h-100">
+                                            <img src="@item.Image" class="card-img-top" alt="Club Image">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h5 class="card-title">@item.Title</h5>
+                                                    <small class="text-muted">@item.ClubCategory</small>
+                                                </div>
+                                                <p class="card-text mt-2 text-truncate" title="@item.Description">
+                                                    @item.Description
+                                                </p>
+                                            </div>
+                                            <div class="card-footer bg-transparent border-top-0">
+                                                <div class="d-flex justify-content-end">
+                                                <a asp-controller="Club" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                                                    @if (SignInManager.IsSignedIn(User))
+                                                    {
+                                                    <a asp-controller="Club" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                                                    <a asp-controller="Club" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary">Delete</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p class="card-text mt-3">
-                                        @item.Description
-                                    </p>
-                                    <div class="mb-2 d-flex justify-content-end">
-                                        <a asp-controller="Club" asp-action="Detail" asp-route-id="@item.Id" type="button" class="button-4">View</a>
-                                        @if (SignInManager.IsSignedIn(User))
-                                        {
-                                            <a asp-controller="Club" asp-action="Edit" asp-route-id="@item.Id" type="button" class="button-4">Edit</a>
-                                            <a asp-controller="Club" asp-action="Delete" asp-route-id="@item.Id" type="button" class="button-4">Delete</a>
-                                        }
-                                    </div>
-                                </div>
+                                }
                             </div>
                         </div>
-                    }
-                  </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </section>
-
-    <script>
-        function openTab(evt, tabName) {
-            var i, tabContent, tabButtons;
-            tabContent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabContent.length; i++) {
-                tabContent[i].style.display = "none";
-            }
-            tabButtons = document.getElementsByClassName("tab-button");
-            for (i = 0; i < tabButtons.length; i++) {
-                tabButtons[i].className = tabButtons[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-    </script>
-</body>
-</html>
-
-
-
-@* <h1 class="display-4 fw-normal">User Dashboard</h1>
-<a type="button" class="btn btn-primary" asp-area="" asp-controller="Club" asp-action="Create">Create Club</a>
-<a type="button" class="btn btn-primary" asp-area="" asp-controller="Race" asp-action="Create">Create Race</a>
-<a type="button" class="btn btn-primary" asp-area="" asp-controller="Dashboard" asp-action="EditUserProfile">Edit User Profile</a>
-<div class="album py-5 bg-light">
-    <div class="container">
-        <h2 class="display-4 fw-normal">Your races</h2>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
-            @foreach (var item in Model.Races)
-            {
-                <div class="col-md-4">
-                    <div class="card mb-4 box-shadow">
-                        <img class="card-img-top" src="@item.Image" width="100%" height="225" alt="Card image cap">
-                        <div class="card-body">
-                            <p class="card-text">@item.Title</p>
-                            <p class="card-text">@item.Description</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a type="btn btn-success" asp-controller="Club" asp-action="Detail" asp-route-id="@item.Id"
-                                       class="btn btn-sm btn-outline-secondary">View</a>
-                                    @if (SignInManager.IsSignedIn(User))
-                                    {
-                                        <a asp-controller="Race" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                        <a asp-controller="Race" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Delete</a>
-                                    }
-                                </div>
-                                <small class="text-muted">@item.RaceCategory</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-        <h2 class="display-4 fw-normal">Your Clubs</h2>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            @foreach (var item in Model.Clubs)
-            {
-                <div class="col-md-4">
-                    <div class="card mb-4 box-shadow">
-                        <img class="card-img-top" src="@item.Image" width="100%" height="225" alt="Card image cap">
-                        <div class="card-body">
-                            <p class="card-text">@item.Title</p>
-                            <p class="card-text">@item.Description</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a type="btn btn-success" asp-controller="Club" asp-action="Detail" asp-route-id="@item.Id"
-                                       class="btn btn-sm btn-outline-secondary">View</a>
-                                    @if (SignInManager.IsSignedIn(User))
-                                    {
-                                        <a asp-controller="Club" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                        <a asp-controller="Club" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Delete</a>
-                                    }
-                                </div>
-                                <small class="text-muted">@item.ClubCategory</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-
     </div>
-</div> *@
+</div>

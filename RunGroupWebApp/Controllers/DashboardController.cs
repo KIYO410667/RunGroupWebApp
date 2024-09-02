@@ -26,10 +26,11 @@ namespace RunGroupWebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var dashboardVM = new DashboardViewModel()
             {
                 Clubs = await _dashboardRepository.GetAllUserClub(),
-                Races = await _dashboardRepository.GetAllUserRace()
+                appUser = await _dashboardRepository.GetUserById(userId)
             };
 
             return View(dashboardVM);

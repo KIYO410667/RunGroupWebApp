@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\club_index.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\profile.css" />
   </ItemGroup>
 
   <ItemGroup>
