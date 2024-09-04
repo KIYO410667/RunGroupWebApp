@@ -27,8 +27,7 @@ namespace RunGroupWebApp.Controllers
                     UserName = user.UserName,
                     Mileage = user.Mileage,
                     Pace = user.Pace,
-                    ProfilePhotoUrl = user.ProfilePhotoUrl,
-                };
+                    ProfilePhotoUrl = user.ProfilePhotoUrl,                };
                 userVms.Add(userVM);
             }
             return View(userVms);
@@ -44,6 +43,7 @@ namespace RunGroupWebApp.Controllers
                 Mileage = result.Mileage,
                 Pace = result.Pace,
                 ProfilePhotoUrl = result.ProfilePhotoUrl,
+                city = result.City
     };
             return View(userVM);
         }

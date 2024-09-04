@@ -1,46 +1,47 @@
-﻿@using RunGroupWebApp.ViewModels
+﻿@using RunGroupWebApp.ViewModels﻿
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
 @model UserViewModel
 
-<section class="bg-white">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8">
-                    <div class="media">
-                    <img alt="Image" src="@Model.ProfilePhotoUrl" class="mr-md-5 avatar avatar-xlg">
-                        <div class="media-body">
-                            <div class="mb-3">
-                                <h1 class="h2 mb-2">@Model.UserName</h1>
-                            </div>
-                            <p class="text-muted">Pace: @Model.Pace</p>
-                            <p class="text-muted">Mileage: @Model.Mileage</p>
-                            <p>
-                                Bit of a go-getter me, creating lovely things that help others. You'll most often find me out back in the hammock, listening to tunes and bending pixels to my will.
-                            </p>
-                            <div>
-                                <button class="btn btn-outline-primary" data-toggle="button"><i class="icon-add-user"></i> Follow</button>
-                                <button class="btn btn-outline-primary">
-                                    <i class="icon-mail"></i>
-                                </button>
-                                <div class="dropdown d-inline-block">
-                                    <button class="btn btn-outline-primary dropdown-toggle dropdown-toggle-no-arrow" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="icon-dots-three-horizontal"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-sm" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 36px, 0px);">
-                                        <a class="dropdown-item" href="#">Add to group</a>
-                                        <a class="dropdown-item" href="#">Share Profile</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Block</a>
-                                        <a class="dropdown-item" href="#">Report</a>
-                                    </div>
-                                </div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
+<div class="gradient-custom-2 ">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center"> 
+            <div class="col-md-10">
+                <div class="card">
+                <div class="rounded-top text-white d-flex flex-row profile-header">
+                    <div class="d-flex flex-column profile-container" style="z-index: 1">
+                        <img src="@Model.ProfilePhotoUrl" alt="Profile Image" class="img-fluid mt-4 mb-1 profile-image" >
+                        @* <a asp-area="" asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-outline-light edit-profile-btn">Edit profile</a> *@
+                    </div>
+                    <div class="ms-3" style="margin-top: 130px;">
+                        <h5 class="profile-username">@Model.UserName</h5>
+                        <p>@Model.city</p>
+                    </div>
+                </div>
+                    <div class="p-4 text-black bg-light">
+                            
+                        <div class="d-flex justify-content-end text-center py-1">
+                            <div class="px-3">
+                                <p class="mb-1 h5">@* @Model.Clubs?.Count() *@ 2</p>
+                                <p class="small text-muted mb-0">Clubs</p>
                             </div>
                         </div>
                     </div>
+                    <div class="card-body p-4 text-black">
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">About Me</p>
+                            @* <div class="p-4 bg-light rounded">
+                                <p class="font-italic mb-1">@Model.appUser?.City</p>
+                            </div> *@
+                        </div>
+                    </div>
                 </div>
-                <!--end of col-->
             </div>
-            <!--end of row-->
         </div>
-        <!--end of container-->
-    </section>
-    <!--end of section-->
+    </div>
+</div>

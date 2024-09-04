@@ -1,4 +1,6 @@
-﻿namespace RunGroupWebApp.ViewModels
+﻿using RunGroupWebApp.Data.Enum;
+
+namespace RunGroupWebApp.ViewModels
 {
     public class UserViewModel
     {
@@ -7,5 +9,6 @@
         public int? Mileage { get; set; }
         public int? Pace { get; set; }
         public string? ProfilePhotoUrl { get; set; }
+        public City? city { get; set; }
     }
 }
