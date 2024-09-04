@@ -11,10 +11,9 @@ namespace RunGroupWebApp.Data
             
         }
 
-        public DbSet<Race> Races { get; set; }
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Address> Addresses { get; set; }
-        public DbSet<AppUserClub> AppUserClubs { get; set; }
+        public DbSet<AppUserClub> AppUserClubs { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
