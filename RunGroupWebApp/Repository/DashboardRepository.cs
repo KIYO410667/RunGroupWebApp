@@ -28,15 +28,6 @@ namespace RunGroupWebApp.Repository
                                  .Where(a => a.AppUser.Id == userId).ToListAsync();
         }
 
-        public async Task<List<Race>> GetAllUserRace()
-        {
-            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // 根據用戶ID過濾文章
-            return await _context.Races
-                                 .Where(a => a.AppUser.Id == userId)
-                                 .ToListAsync();
-        }
 
         public async Task<AppUser> GetUserById(string id)
         {

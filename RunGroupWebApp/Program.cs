@@ -17,7 +17,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
-builder.Services.AddScoped<IRaceRepository, RaceRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppUserClubRepository, AppUserClubRepository>();
 

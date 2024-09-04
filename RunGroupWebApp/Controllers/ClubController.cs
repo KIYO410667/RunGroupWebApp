@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RunGroupWebApp.Data;
-using RunGroupWebApp.Data.Enum;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
-using RunGroupWebApp.Repository;
-using RunGroupWebApp.Services;
 using RunGroupWebApp.ViewModels;
 using System.Security.Claims;
 
