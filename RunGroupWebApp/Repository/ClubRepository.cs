@@ -29,7 +29,7 @@ namespace RunGroupWebApp.Repository
 
         public async Task<IEnumerable<Club>> GetAll()
         {
-            return await _context.Clubs.ToListAsync();
+            return await _context.Clubs.Include(a => a.AppUser).ToListAsync();
         }
 
         public async Task<IEnumerable<Club>> GetAllClubsByCity(string city)
@@ -62,6 +62,11 @@ namespace RunGroupWebApp.Repository
         {
             _context.Update(club);
             return Save();
+        }
+
+        public async Task<List<Club>> GetClubsByUserId(string userId)
+        {
+            return await _context.Clubs.Include(au => au.AppUser).Where(au => au.AppUserId == userId).ToListAsync();
         }
     }
 }

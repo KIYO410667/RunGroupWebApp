@@ -3,11 +3,14 @@
 @inject SignInManager<AppUser> SignInManager
 @model UserViewModel
 
-
+@{
+    ViewData["Title"] = "User Profile";
+}
 
 @section Styles {
     <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
 }
+
 <div class="gradient-custom-2 ">
     <div class="container py-5">
         <div class="row d-flex justify-content-center"> 
@@ -27,7 +30,7 @@
                             
                         <div class="d-flex justify-content-end text-center py-1">
                             <div class="px-3">
-                                <p class="mb-1 h5">@* @Model.Clubs?.Count() *@ 2</p>
+                                <p class="mb-1 h5">@Model.ClubNumber</p>
                                 <p class="small text-muted mb-0">Clubs</p>
                             </div>
                         </div>

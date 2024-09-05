@@ -10,5 +10,6 @@ namespace RunGroupWebApp.ViewModels
         public int? Pace { get; set; }
         public string? ProfilePhotoUrl { get; set; }
         public City? city { get; set; }
+        public int ClubNumber { get; set; } = 0;
     }
 }

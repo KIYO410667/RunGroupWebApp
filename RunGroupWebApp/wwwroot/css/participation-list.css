@@ -10,6 +10,12 @@ body {
     padding: 0 15px;
 }
 
+.card-background {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
 /* Header styles */
 h1.display-4, h2.display-4 {
     color: #333;
@@ -117,6 +123,10 @@ h2.display-4 {
 @media (max-width: 768px) {
     .container {
         max-width: 540px;
+    }
+
+    .card-background {
+        padding: 10px;
     }
 
     h1.display-4 {

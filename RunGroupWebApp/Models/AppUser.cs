@@ -14,6 +14,7 @@ namespace RunGroupWebApp.Models
         public int? Pace { get; set; }
         public int? Mileage { get; set; }
         public string? ProfilePhotoUrl { get; set; }
+        //public string? Bio { get; set; }
 
         public string? Street { get; set; }
         public City? City { get; set; }

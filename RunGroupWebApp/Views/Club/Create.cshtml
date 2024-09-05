@@ -6,69 +6,84 @@
 *@
 @{
 }
-  <body class="bg-light">
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/create-club.css" asp-append-version="true" />
+}
+<body>
     <div class="container">
-      <div class="py-5 text-center">
-        <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-            <h2>創造自己的Club吧</h2>
-        <p class="lead">輸入活動相關資訊</p>
-      </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 form-container">
+                <div class="form-header">
+                    <h2>創造自己的Club</h2>
+                    <p class="lead">輸入活動相關資訊</p>
+                </div>
+                <form method="post" asp-action="Create" class="needs-validation" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="AppUserId" name="AppUserId" />
 
-      <div class="row">
-        <div class="col-md-8 order-md-1">
-          <h4 class="mb-3">活動內容</h4>
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">活動名稱</label>
+                        <input asp-for="Title" class="form-control" placeholder="輸入活動名稱" required>
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
 
-          <form method="post" asp-action="Create" class="needs-validation" enctype="multipart/form-data">
-            <input type="hidden" asp-for="AppUserId" name="AppUserId" />
-            <div class="mb-3">
-                <label asp-for="Title">活動名稱</label>
-                <input asp-for="Title" class="form-control" placeholder="活動名稱" required>
-                <span asp-validation-for="Title" class="text-danger"></span>
+                    <div class="mb-3">
+                        <label asp-for="ClubCategory" class="form-label">類別</label>
+                        <select asp-for="ClubCategory" asp-items="@Html.GetEnumSelectList<ClubCategory>()" class="form-select" required>
+                            <option value="">--選擇--</option>
+                        </select>
+                        <span asp-validation-for="ClubCategory" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">活動詳細</label>
+                        <textarea asp-for="Description" class="form-control" placeholder="描述活動內容" rows="4" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Image" class="form-label">圖片上傳</label>
+                        <input asp-for="Image" type="file" class="form-control" id="imageUpload" accept="image/*" required>
+                        <span asp-validation-for="Image" class="text-danger"></span>
+                        <img id="imagePreview" src="#" alt="圖片預覽" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Address.Street" class="form-label">地址</label>
+                        <input asp-for="Address.Street" class="form-control" placeholder="輸入街道名稱" required>
+                        <span asp-validation-for="Address.Street" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Address.City" class="form-label">縣市</label>
+                        <select asp-for="Address.City" asp-items="@Html.GetEnumSelectList<City>()" class="form-select" required>
+                            <option value="">--選擇--</option>
+                        </select>
+                        <span asp-validation-for="Address.City" class="text-danger"></span>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary btn-submit" type="submit">建立活動</button>
+                    </div>
+                </form>
             </div>
-
-            <div class="col-md-5 mb-3">
-                <label asp-for="ClubCategory">類別</label>
-                <select asp-for="ClubCategory" asp-items="@Html.GetEnumSelectList<ClubCategory>()"
-                           class="form-control" required>
-                       <option value="">--選擇--</option>
-                </select>
-                <span asp-validation-for="ClubCategory" class="text-danger"></span>
-            </div>
-            
-            <div class="mb-3">
-              <label asp-for="Description">活動詳細</label>
-              <input asp-for="Description" class="form-control" placeholder="活動內容" required>
-              <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-              <label asp-for="Image">圖片上傳</label><br/>
-              <input asp-for="Image" type="file" class="form-control" required>
-              <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-              <label asp-for="Address.Street">地址</label>
-              <input asp-for="Address.Street" class="form-control" placeholder="西屯路二段" required>
-              <span asp-validation-for="Address.Street" class="text-danger"></span>
-            </div>
-
-            
-            <div class="col-md-5 mb-3">
-              <label asp-for="Address.City">縣市</label>
-              <select asp-for="Address.City" asp-items="@Html.GetEnumSelectList<City>()"
-                  class="form-control" required>
-                  <option>--選擇--</option>
-              </select>
-              <span asp-validation-for="Address.City" class="text-danger"></span>
-            </div>
-
-
-            <hr class="mb-4">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
-          </form>
         </div>
-      </div>
     </div>
-  </body>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('imageUpload').onchange = function (evt) {
+            var tgt = evt.target || window.event.srcElement,
+                files = tgt.files;
+
+            if (FileReader && files && files.length) {
+                var fr = new FileReader();
+                fr.onload = function () {
+                    document.getElementById('imagePreview').src = fr.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                }
+                fr.readAsDataURL(files[0]);
+            }
+        }
+    </script>
+}

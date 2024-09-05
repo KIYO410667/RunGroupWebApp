@@ -8,10 +8,12 @@ namespace RunGroupWebApp.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IClubRepository _clubRepository;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IClubRepository clubRepository)
         {
             _userRepository = userRepository;
+            _clubRepository = clubRepository;
         }
 
         [HttpGet("users")]
@@ -36,6 +38,7 @@ namespace RunGroupWebApp.Controllers
         public async Task<IActionResult> Detail(string id)
         {
             var result = await _userRepository.GetUserById(id);
+            var clubs = await _clubRepository.GetClubsByUserId(id);
             var userVM = new UserViewModel()
             {
                 Id = result.Id,
@@ -43,8 +46,9 @@ namespace RunGroupWebApp.Controllers
                 Mileage = result.Mileage,
                 Pace = result.Pace,
                 ProfilePhotoUrl = result.ProfilePhotoUrl,
-                city = result.City
-    };
+                city = result.City,
+                ClubNumber = clubs.Count()
+            };
             return View(userVM);
         }
 

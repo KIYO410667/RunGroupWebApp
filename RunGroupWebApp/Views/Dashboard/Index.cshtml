@@ -2,6 +2,10 @@
 @inject SignInManager<AppUser> SignInManager
 
 @model RunGroupWebApp.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Personal Profile";
+}
+
 
 @section Styles {
     <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
