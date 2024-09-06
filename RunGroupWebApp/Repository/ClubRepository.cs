@@ -68,5 +68,31 @@ namespace RunGroupWebApp.Repository
         {
             return await _context.Clubs.Include(au => au.AppUser).Where(au => au.AppUserId == userId).ToListAsync();
         }
+
+        public async Task<IEnumerable<Club>> SearchClubsAsync(string keyword, ClubCategory? category, City? city)
+        {
+            IQueryable<Club> query = _context.Clubs;
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                keyword = keyword.ToLower();
+                query = query.Where(c =>
+                    EF.Functions.Like(c.Title.ToLower(), $"%{keyword}%") ||
+                    EF.Functions.Like(c.Description.ToLower(), $"%{keyword}%"));
+            }
+
+            if (category.HasValue)
+            {
+                query = query.Where(c => c.ClubCategory == category.Value);
+            }
+
+            if (city.HasValue)
+            {
+                query = query.Where(c => c.Address.City == city.Value);
+            }
+
+            return await query.Include(a => a.AppUser).ToListAsync();
+        }
+    
     }
 }

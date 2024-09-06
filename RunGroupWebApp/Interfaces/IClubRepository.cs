@@ -1,4 +1,5 @@
-﻿using RunGroupWebApp.Models;
+﻿using RunGroupWebApp.Data.Enum;
+using RunGroupWebApp.Models;
 
 namespace RunGroupWebApp.Interfaces
 {
@@ -7,6 +8,7 @@ namespace RunGroupWebApp.Interfaces
         Task<IEnumerable<Club>> GetAll();
         Task<Club> GetById(int id);
         Task<Club> GetClubWithAppUserById(int id);
+        Task<IEnumerable<Club>> SearchClubsAsync(string keyword, ClubCategory? category, City? city);
         Task<IEnumerable<Club>> GetAllClubsByCity(string city);
         Task<List<Club>> GetClubsByUserId(string userId);
         bool Add(Club club);

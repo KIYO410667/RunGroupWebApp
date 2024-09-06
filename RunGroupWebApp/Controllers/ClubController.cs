@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RunGroupWebApp.Data.Enum;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
@@ -23,12 +24,16 @@ namespace RunGroupWebApp.Controllers
             _appUserClubRepository = appUserClubRepository;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        //public async Task<IActionResult> IndexAsync()
+        //{
+        //    IEnumerable<Club> clubs = await _clubRepository.GetAll();
+        //    return View(clubs);
+        //}
+        public async Task<IActionResult> IndexAsync(string keyword, ClubCategory? category, City? city)
         {
-            IEnumerable<Club> clubs = await _clubRepository.GetAll();
+            var clubs = await _clubRepository.SearchClubsAsync(keyword, category, city);
             return View(clubs);
         }
-
         public async Task<IActionResult> Detail(int id)
         {
             Club club = await _clubRepository.GetClubWithAppUserById(id);
