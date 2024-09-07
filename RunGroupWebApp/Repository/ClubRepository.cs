@@ -3,6 +3,7 @@ using RunGroupWebApp.Data;
 using RunGroupWebApp.Data.Enum;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
+using RunGroupWebApp.ViewModels;
 
 namespace RunGroupWebApp.Repository
 {
@@ -69,7 +70,7 @@ namespace RunGroupWebApp.Repository
             return await _context.Clubs.Include(au => au.AppUser).Where(au => au.AppUserId == userId).ToListAsync();
         }
 
-        public async Task<IEnumerable<Club>> SearchClubsAsync(string keyword, ClubCategory? category, City? city)
+        public async Task<IEnumerable<ClubSummaryViewModel>> SearchClubsAsync(string keyword, ClubCategory? category, City? city, int page = 1, int pageSize = 9)
         {
             IQueryable<Club> query = _context.Clubs;
 
@@ -91,8 +92,78 @@ namespace RunGroupWebApp.Repository
                 query = query.Where(c => c.Address.City == city.Value);
             }
 
-            return await query.Include(a => a.AppUser).ToListAsync();
+            return await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(a => a.AppUser)
+                .Select(c => new ClubSummaryViewModel
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    Description = c.Description,
+                    ImageUrl = c.Image,
+                    UserName = c.AppUser.UserName,
+                    ProfilePhotoUrl = c.AppUser.ProfilePhotoUrl
+                })
+                .ToListAsync();
         }
-    
+
+        public async Task<int> GetSearchResultsCountAsync(string keyword, ClubCategory? category, City? city)
+        {
+            IQueryable<Club> query = _context.Clubs;
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(c => c.Title.Contains(keyword) || c.Description.Contains(keyword));
+            }
+
+            if (category.HasValue)
+            {
+                query = query.Where(c => c.ClubCategory == category.Value);
+            }
+
+            if (city.HasValue)
+            {
+                query = query.Where(c => c.Address.City == city.Value);
+            }
+
+            return await query.CountAsync();
+        }
+
+        //public async Task<IEnumerable<ClubSummaryViewModel>> SearchClubsAsync(string keyword, ClubCategory? category, City? city)
+        //{
+        //    IQueryable<Club> query = _context.Clubs;
+
+        //    if (!string.IsNullOrEmpty(keyword))
+        //    {
+        //        keyword = keyword.ToLower();
+        //        query = query.Where(c =>
+        //            EF.Functions.Like(c.Title.ToLower(), $"%{keyword}%") ||
+        //            EF.Functions.Like(c.Description.ToLower(), $"%{keyword}%"));
+        //    }
+
+        //    if (category.HasValue)
+        //    {
+        //        query = query.Where(c => c.ClubCategory == category.Value);
+        //    }
+
+        //    if (city.HasValue)
+        //    {
+        //        query = query.Where(c => c.Address.City == city.Value);
+        //    }
+
+        //    return await query.Include(a => a.AppUser)
+        //    .Select(c => new ClubSummaryViewModel
+        //    {
+        //        Id = c.Id,
+        //        Title = c.Title,
+        //        Description = c.Description,
+        //        ImageUrl = c.Image,
+        //        UserName = c.AppUser.UserName,
+        //        ProfilePhotoUrl = c.AppUser.ProfilePhotoUrl
+        //    })
+        //    .ToListAsync();
+        //}
+
     }
 }

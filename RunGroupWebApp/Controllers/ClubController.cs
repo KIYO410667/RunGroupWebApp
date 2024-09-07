@@ -24,16 +24,30 @@ namespace RunGroupWebApp.Controllers
             _appUserClubRepository = appUserClubRepository;
         }
 
-        //public async Task<IActionResult> IndexAsync()
+        private const int PageSize = 9; // 3x3 grid
+        public async Task<IActionResult> Index(string keyword, ClubCategory? category, City? city, int page = 1)
+        {
+            // Store search parameters in ViewData for use in pagination links and form repopulation
+            ViewData["Keyword"] = keyword;
+            ViewData["Category"] = category?.ToString();
+            ViewData["City"] = city?.ToString();
+
+            var clubs = await _clubRepository.SearchClubsAsync(keyword, category, city, page, PageSize);
+            var totalCount = await _clubRepository.GetSearchResultsCountAsync(keyword, category, city);
+
+            var model = new PaginatedList<ClubSummaryViewModel>(clubs, totalCount, page, PageSize);
+
+            return View(model);
+        }
+
+
+
+        //public async Task<IActionResult> IndexAsync(string keyword, ClubCategory? category, City? city)
         //{
-        //    IEnumerable<Club> clubs = await _clubRepository.GetAll();
+        //    var clubs = await _clubRepository.SearchClubsAsync(keyword, category, city);
         //    return View(clubs);
         //}
-        public async Task<IActionResult> IndexAsync(string keyword, ClubCategory? category, City? city)
-        {
-            var clubs = await _clubRepository.SearchClubsAsync(keyword, category, city);
-            return View(clubs);
-        }
+
         public async Task<IActionResult> Detail(int id)
         {
             Club club = await _clubRepository.GetClubWithAppUserById(id);
