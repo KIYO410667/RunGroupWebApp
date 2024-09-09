@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RunGroupWebApp.Data;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
+using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RunGroupWebApp.Controllers
@@ -18,9 +19,15 @@ namespace RunGroupWebApp.Controllers
             _signInManager = signInManager;
             _context = context;
         }
-        public IActionResult Login()
+        public async Task<IActionResult> Login(string errorMessage = null)
         {
-            var loginVM = new LoginViewModel(); // Replace with your actual ViewModel initialization logic
+            var loginVM = new LoginViewModel()
+            {
+            }; // Replace with your actual ViewModel initialization logic
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                ModelState.AddModelError(string.Empty, errorMessage);
+            }
             return View(loginVM);
         }
 
@@ -101,6 +108,64 @@ namespace RunGroupWebApp.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        // New method to handle the callback from Google
+        public async Task<IActionResult> ExternalLoginCallback(string remoteError = null)
+        {
+            if (remoteError != null)
+            {
+                // Handle the "access_denied" error specifically
+                if (remoteError == "access_denied")
+                {
+                    return RedirectToAction("Login", new { errorMessage = "You canceled the Google login process. Please try again or use another login method." });
+                }
+                // Handle other remote errors
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                return View("Login");
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                // This can happen if the user canceled the login process
+                return RedirectToAction("Login", new { errorMessage = "There was an issue with the external login. Please try again." });
+            }
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email != null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user == null)
+                    {
+                        user = new AppUser { UserName = email, Email = email };
+                        await _userManager.CreateAsync(user);
+                        await _userManager.AddToRoleAsync(user, UserRoles.User);
+                    }
+
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("Index", "Home");
+                }
+
+                return View("Error");
+            }
         }
     }
 }
