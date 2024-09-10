@@ -167,5 +167,10 @@ namespace RunGroupWebApp.Controllers
                 return View("Error");
             }
         }
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,11 +49,29 @@ builder.Services.AddSession();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
 
+builder.Services.Configure<GoogleAuthConfig>(builder.Configuration.GetSection("Authentication:Google"));
+
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        var googleConfig = builder.Configuration.GetSection("Authentication:Google").Get<GoogleAuthConfig>();
+        options.ClientId = googleConfig.ClientId;
+        options.ClientSecret = googleConfig.ClientSecret;
+
+        options.Events = new OAuthEvents
+        {
+            OnRemoteFailure = context =>
+            {
+                var exception = context.Failure;
+                if (exception is AuthenticationFailureException authFailure &&
+                    authFailure.Message.Contains("Access was denied by the resource owner or by the remote server"))
+                {
+                    context.Response.Redirect("/Account/AccessDenied");
+                    context.HandleResponse(); // Suppress the default error handler
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 var app = builder.Build();
