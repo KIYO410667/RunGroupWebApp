@@ -123,47 +123,78 @@ namespace RunGroupWebApp.Controllers
         {
             if (remoteError != null)
             {
-                // Handle the "access_denied" error specifically
                 if (remoteError == "access_denied")
                 {
-                    return RedirectToAction("Login", new { errorMessage = "You canceled the Google login process. Please try again or use another login method." });
+                    return RedirectToAction("AccessDenied", new { errorMessage = "You canceled the Google login process. Please try again or use another login method." });
                 }
-                // Handle other remote errors
                 ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
-                return View("Login");
+                return View("AccessDenied");
             }
 
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                // This can happen if the user canceled the login process
                 return RedirectToAction("Login", new { errorMessage = "There was an issue with the external login. Please try again." });
             }
 
+            // Attempt to sign in the user with the external login provider
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var photoUrl = info.Principal.FindFirstValue("picture");
+
             if (result.Succeeded)
             {
+                // User has successfully logged in
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user != null && user.ProfilePhotoUrl != photoUrl)
+                {
+                    // Update photo URL if it has changed
+                    user.ProfilePhotoUrl = photoUrl;
+                    await _userManager.UpdateAsync(user);
+                }
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                // If the user does not have an account, then we need to create one
                 if (email != null)
                 {
                     var user = await _userManager.FindByEmailAsync(email);
                     if (user == null)
                     {
-                        user = new AppUser { UserName = email, Email = email };
-                        await _userManager.CreateAsync(user);
+                        user = new AppUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            ProfilePhotoUrl = photoUrl
+                        };
+                        var createResult = await _userManager.CreateAsync(user);
+                        if (!createResult.Succeeded)
+                        {
+                            ModelState.AddModelError(string.Empty, "Error creating user account.");
+                            return View("Login");
+                        }
                         await _userManager.AddToRoleAsync(user, UserRoles.User);
                     }
+                    else
+                    {
+                        // Existing user, update photo if necessary
+                        if (user.ProfilePhotoUrl != photoUrl)
+                        {
+                            user.ProfilePhotoUrl = photoUrl;
+                            await _userManager.UpdateAsync(user);
+                        }
+                    }
 
+                    // Add the external login to the user account
                     await _userManager.AddLoginAsync(user, info);
+
+                    // Sign in the user
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
                     return RedirectToAction("Index", "Home");
                 }
-
                 return View("Error");
             }
         }

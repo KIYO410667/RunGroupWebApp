@@ -57,6 +57,9 @@ builder.Services.AddAuthentication()
         var googleConfig = builder.Configuration.GetSection("Authentication:Google").Get<GoogleAuthConfig>();
         options.ClientId = googleConfig.ClientId;
         options.ClientSecret = googleConfig.ClientSecret;
+        options.Scope.Add("profile"); // Add this line
+        options.Scope.Add("email");   // You probably already have this
+        options.ClaimActions.MapJsonKey("picture", "picture", "url");
 
         options.Events = new OAuthEvents
         {
