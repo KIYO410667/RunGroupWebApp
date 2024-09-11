@@ -11,10 +11,10 @@ namespace RunGroupWebApp.Models
         [ForeignKey("Address")]
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
-        public int? Pace { get; set; }
-        public int? Mileage { get; set; }
+        //public int? Pace { get; set; }
+        //public int? Mileage { get; set; }
         public string? ProfilePhotoUrl { get; set; }
-        //public string? Bio { get; set; }
+        public string? Bio { get; set; }
 
         public string? Street { get; set; }
         public City? City { get; set; }

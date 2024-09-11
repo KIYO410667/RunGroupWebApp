@@ -39,8 +39,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Description">活動詳細</label>
-                        <input asp-for="Description" class="form-control" placeholder="活動內容" required>
+                        <label asp-for="Description" class="form-label">活動詳細</label>
+                        <textarea asp-for="Description" class="form-control" placeholder="描述活動內容" rows="4" required></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 

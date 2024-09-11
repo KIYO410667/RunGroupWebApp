@@ -27,8 +27,7 @@ namespace RunGroupWebApp.Controllers
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    Mileage = user.Mileage,
-                    Pace = user.Pace,
+                    Bio = user.Bio,
                     ProfilePhotoUrl = user.ProfilePhotoUrl,                };
                 userVms.Add(userVM);
             }
@@ -43,8 +42,7 @@ namespace RunGroupWebApp.Controllers
             {
                 Id = result.Id,
                 UserName = result.UserName,
-                Mileage = result.Mileage,
-                Pace = result.Pace,
+                Bio = result.Bio,
                 ProfilePhotoUrl = result.ProfilePhotoUrl,
                 city = result.City,
                 ClubNumber = clubs.Count()

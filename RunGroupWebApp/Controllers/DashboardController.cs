@@ -46,8 +46,7 @@ namespace RunGroupWebApp.Controllers
             {
                 Id = userId,
                 UserName = currentUser.UserName,
-                Pace = currentUser.Pace,
-                Mileage = currentUser.Mileage,
+                Bio = currentUser.Bio,
                 ProfilePhotoUrl = currentUser.ProfilePhotoUrl,
                 City = currentUser.City,
                 Street = currentUser.Street,
@@ -86,8 +85,7 @@ namespace RunGroupWebApp.Controllers
             }
 
             //3. Update other user's properties
-            currentUser.Pace = editUserVM.Pace;
-            currentUser.Mileage = editUserVM.Mileage;
+            currentUser.Bio = editUserVM.Bio;
             currentUser.City = editUserVM.City;
             currentUser.Street = editUserVM.Street;
             currentUser.UserName = editUserVM.UserName;

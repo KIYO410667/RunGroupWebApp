@@ -92,10 +92,12 @@ namespace RunGroupWebApp.Repository
                 query = query.Where(c => c.Address.City == city.Value);
             }
 
+            // Add OrderBy before Skip and Take
+            query = query.OrderBy(c => c.Id);
+
             return await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Include(a => a.AppUser)
                 .Select(c => new ClubSummaryViewModel
                 {
                     Id = c.Id,
@@ -129,41 +131,6 @@ namespace RunGroupWebApp.Repository
 
             return await query.CountAsync();
         }
-
-        //public async Task<IEnumerable<ClubSummaryViewModel>> SearchClubsAsync(string keyword, ClubCategory? category, City? city)
-        //{
-        //    IQueryable<Club> query = _context.Clubs;
-
-        //    if (!string.IsNullOrEmpty(keyword))
-        //    {
-        //        keyword = keyword.ToLower();
-        //        query = query.Where(c =>
-        //            EF.Functions.Like(c.Title.ToLower(), $"%{keyword}%") ||
-        //            EF.Functions.Like(c.Description.ToLower(), $"%{keyword}%"));
-        //    }
-
-        //    if (category.HasValue)
-        //    {
-        //        query = query.Where(c => c.ClubCategory == category.Value);
-        //    }
-
-        //    if (city.HasValue)
-        //    {
-        //        query = query.Where(c => c.Address.City == city.Value);
-        //    }
-
-        //    return await query.Include(a => a.AppUser)
-        //    .Select(c => new ClubSummaryViewModel
-        //    {
-        //        Id = c.Id,
-        //        Title = c.Title,
-        //        Description = c.Description,
-        //        ImageUrl = c.Image,
-        //        UserName = c.AppUser.UserName,
-        //        ProfilePhotoUrl = c.AppUser.ProfilePhotoUrl
-        //    })
-        //    .ToListAsync();
-        //}
 
     }
 }
