@@ -1,4 +1,5 @@
 ﻿using RunGroupWebApp.Data.Enum;
+using RunGroupWebApp.Models;
 
 namespace RunGroupWebApp.ViewModels
 {
@@ -10,5 +11,6 @@ namespace RunGroupWebApp.ViewModels
         public string? ProfilePhotoUrl { get; set; }
         public City? city { get; set; }
         public int ClubNumber { get; set; } = 0;
+        public List<Club> clubs { get; set; }
     }
 }
