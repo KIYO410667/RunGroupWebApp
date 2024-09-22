@@ -48,8 +48,7 @@ namespace RunGroupWebApp.Controllers
                 UserName = currentUser.UserName,
                 Bio = currentUser.Bio,
                 ProfilePhotoUrl = currentUser.ProfilePhotoUrl,
-                City = currentUser.City,
-                Street = currentUser.Street,
+                Address = currentUser.Address,
             };
             return View(editUserVM);
         }
@@ -86,8 +85,8 @@ namespace RunGroupWebApp.Controllers
 
             //3. Update other user's properties
             currentUser.Bio = editUserVM.Bio;
-            currentUser.City = editUserVM.City;
-            currentUser.Street = editUserVM.Street;
+            currentUser.Address.City = editUserVM.Address.City;
+            currentUser.Address.Street = editUserVM.Address.Street;
             currentUser.UserName = editUserVM.UserName;
 
             //4. Handle the new image upload

@@ -49,6 +49,11 @@ namespace RunGroupWebApp.Repository
             return await _context.Clubs.Include(a => a.Address).FirstOrDefaultAsync(i => i.Id == id);
         }
 
+        public async Task<Club> GetByIdIncludeAppUserClub(int id)
+        {
+            return await _context.Clubs.Include(ac => ac.AppUserClubs).FirstOrDefaultAsync(i => i.Id == id);
+        }
+
         public async Task<Club> GetClubWithAppUserById(int id)
         {
             return await _context.Clubs.Include(a => a.Address).Include(a => a.AppUser).FirstOrDefaultAsync(i => i.Id == id);

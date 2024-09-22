@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunGroupWebApp.Data;
 
@@ -11,9 +12,11 @@ using RunGroupWebApp.Data;
 namespace RunGroupWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240916160837_RefactorAllRelationships")]
+    partial class RefactorAllRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,13 +166,7 @@ namespace RunGroupWebApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("City")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ClubId")
                         .HasColumnType("int");
 
                     b.Property<string>("Street")
@@ -177,10 +174,6 @@ namespace RunGroupWebApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique()
-                        .HasDatabaseName("IX_AddressId");
 
                     b.ToTable("Addresses");
                 });
@@ -258,10 +251,6 @@ namespace RunGroupWebApp.Migrations
                         .IsUnique()
                         .HasFilter("[AddressId] IS NOT NULL");
 
-                    b.HasIndex("Id")
-                        .IsUnique()
-                        .HasDatabaseName("IX_AppUserId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -284,9 +273,6 @@ namespace RunGroupWebApp.Migrations
                     b.HasKey("AppUserId", "ClubId");
 
                     b.HasIndex("ClubId");
-
-                    b.HasIndex("AppUserId", "ClubId")
-                        .HasDatabaseName("IX_ParticipantIdClubId");
 
                     b.ToTable("AppUserClubs");
                 });
@@ -332,12 +318,7 @@ namespace RunGroupWebApp.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("AppUserId")
-                        .HasDatabaseName("IX_CreatedClubAppUserId");
-
-                    b.HasIndex("Id")
-                        .IsUnique()
-                        .HasDatabaseName("IX_ClubId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Clubs");
                 });
@@ -445,7 +426,8 @@ namespace RunGroupWebApp.Migrations
                 {
                     b.Navigation("AppUser");
 
-                    b.Navigation("Club");
+                    b.Navigation("Club")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RunGroupWebApp.Models.AppUser", b =>

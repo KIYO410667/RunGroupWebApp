@@ -6,10 +6,11 @@ namespace RunGroupWebApp.Interfaces
 {
     public interface IClubRepository
     {
+
         Task<IEnumerable<Club>> GetAll();
         Task<Club> GetById(int id);
         Task<Club> GetClubWithAppUserById(int id);
-        //Task<IEnumerable<ClubSummaryViewModel>> SearchClubsAsync(string keyword, ClubCategory? category, City? city);
+        Task<Club> GetByIdIncludeAppUserClub(int id);
         Task<IEnumerable<ClubSummaryViewModel>> SearchClubsAsync(
         string keyword, ClubCategory? category, City? city,
         int page = 1, int pageSize = 9);

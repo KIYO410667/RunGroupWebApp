@@ -22,12 +22,17 @@
                         </div>
                     <p class="lead">@Model.Club.Description</p>
                         <div class="d-flex">
-                        <form asp-controller="AppUserClub" asp-action="Add" asp-route-id="@Model.Club.Id" method="post" class="d-inline">
+                            <form asp-controller="AppUserClub" asp-action="Add" asp-route-id="@Model.Club.Id" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-outline-dark flex-shrink-0">
                                     <i class="bi bi-person-plus-fill"></i>
                                     參加
                                 </button>
                             </form>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                            {
+                        <a asp-controller="Club" asp-action="Edit" asp-route-id="@Model.Club.Id" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <a asp-controller="Club" asp-action="Delete" asp-route-id="@Model.Club.Id" type="button" class="btn btn-sm btn-outline-secondary">Delete</a>
+                            }
                         </div>
                     </div>
                 </div>

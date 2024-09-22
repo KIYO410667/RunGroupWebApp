@@ -36,17 +36,17 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Street" class="form-label">地址</label>
-                            <input asp-for="Street" class="form-control" placeholder="西屯路二段" required>
-                            <span asp-validation-for="Street" class="text-danger"></span>
+                            <label asp-for="Address.Street" class="form-label">地址</label>
+                            <input asp-for="Address.Street" class="form-control" placeholder="西屯路二段" required>
+                            <span asp-validation-for="Address.Street" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="City" class="form-label">縣市</label>
-                            <select asp-for="City" asp-items="@Html.GetEnumSelectList<City>()"
+                            <label asp-for="Address.City" class="form-label">縣市</label>
+                            <select asp-for="Address.City" asp-items="@Html.GetEnumSelectList<City>()"
                                     class="form-select" required>
                                 <option value="">--選擇--</option>
                             </select>
-                            <span asp-validation-for="City" class="text-danger"></span>
+                            <span asp-validation-for="Address.City" class="text-danger"></span>
                         </div>
                         <hr class="mb-4">
                         <button class="btn btn-primary btn-lg w-100" type="submit">提交修改</button>

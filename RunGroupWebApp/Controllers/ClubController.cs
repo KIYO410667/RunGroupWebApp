@@ -40,14 +40,6 @@ namespace RunGroupWebApp.Controllers
             return View(model);
         }
 
-
-
-        //public async Task<IActionResult> IndexAsync(string keyword, ClubCategory? category, City? city)
-        //{
-        //    var clubs = await _clubRepository.SearchClubsAsync(keyword, category, city);
-        //    return View(clubs);
-        //}
-
         public async Task<IActionResult> Detail(int id)
         {
             Club club = await _clubRepository.GetClubWithAppUserById(id);
@@ -195,7 +187,7 @@ namespace RunGroupWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var club = await _clubRepository.GetById(id);
+            var club = await _clubRepository.GetByIdIncludeAppUserClub(id);
             if (club == null)
             {
                 return View("Error");
@@ -216,10 +208,21 @@ namespace RunGroupWebApp.Controllers
                 }
             }
 
-            // Delete the club from the database
-            _clubRepository.Delete(club);
+            try
+            {
+                // Delete the club from the database
+                _clubRepository.Delete(club);
 
-            return RedirectToAction("Index");
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log the exception
+                //_logger.LogError(ex, "Error deleting club {ClubId}", id);
+                ModelState.AddModelError(string.Empty, "刪除俱樂部時發生錯誤。可能是因為此俱樂部仍有關聯的數據。");
+                return View(club);
+            }
         }
     }
 }

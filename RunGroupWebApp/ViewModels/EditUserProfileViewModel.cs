@@ -1,6 +1,7 @@
 ﻿using RunGroupWebApp.Data.Enum;
 using System.ComponentModel.DataAnnotations;
 using RunGroupWebApp.Data.Enum;
+using RunGroupWebApp.Models;
 
 namespace RunGroupWebApp.ViewModels
 {
@@ -11,9 +12,6 @@ namespace RunGroupWebApp.ViewModels
         public string? Bio { get; set; }
         public IFormFile? ProfilePhotoFile { get; set; }
         public string? ProfilePhotoUrl { get; set; }
-        
-        public string? Street { get; set; }
-        
-        public City? City { get; set; }
+        public Address? Address { get; set; }
     }
 }
