@@ -35,6 +35,11 @@ namespace RunGroupWebApp.Repository
             return await _context.Users.FindAsync(id);
         }
 
+        public async Task<List<Club>> GetClubsByUserId(string userId)
+        {
+            return await _context.Clubs.Where(au => au.AppUserId == userId).ToListAsync();
+        }
+
         public bool Save()
         {
             var result = _context.SaveChanges();

@@ -13,15 +13,13 @@ namespace RunGroupWebApp.Controllers
         private readonly IClubRepository _clubRepository;
         private readonly IAzureBlobService _azureBlobService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAppUserClubRepository _appUserClubRepository;
 
         public ClubController(IClubRepository clubRepository, IAzureBlobService azureBlobService,
-            IHttpContextAccessor httpContextAccessor, IAppUserClubRepository appUserClubRepository)
+            IHttpContextAccessor httpContextAccessor)
         {
             _clubRepository = clubRepository;
             _azureBlobService = azureBlobService;
             _httpContextAccessor = httpContextAccessor;
-            _appUserClubRepository = appUserClubRepository;
         }
 
         private const int PageSize = 9; // 3x3 grid
@@ -44,7 +42,7 @@ namespace RunGroupWebApp.Controllers
         {
             Club club = await _clubRepository.GetClubWithAppUserById(id);
             if(club == null) return View("Error");
-            List<AppUser> users = await _appUserClubRepository.GetAllUsers(id);
+            List<AppUser> users = await _clubRepository.GetAllUsers(id);
             ClubWithUsersViewModel clubUsers = new ClubWithUsersViewModel()
             {
                 Club = club,

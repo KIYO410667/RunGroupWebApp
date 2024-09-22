@@ -11,6 +11,8 @@ namespace RunGroupWebApp.Interfaces
         Task<Club> GetById(int id);
         Task<Club> GetClubWithAppUserById(int id);
         Task<Club> GetByIdIncludeAppUserClub(int id);
+        Task<List<AppUser>> GetAllUsers(int clubId);
+
         Task<IEnumerable<ClubSummaryViewModel>> SearchClubsAsync(
         string keyword, ClubCategory? category, City? city,
         int page = 1, int pageSize = 9);
