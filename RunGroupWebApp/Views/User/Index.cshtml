@@ -1,6 +1,11 @@
 ﻿@using RunGroupWebApp.ViewModels
 @model List<UserViewModel>
 
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/club-detail.css" asp-append-version="true" />
+}
+
 <section class="flush-with-above">
     <div class="container">
         <div class="row">
@@ -13,7 +18,7 @@
                             <div class="col mb-5">
                                 <div class="card h-100">
                                     <!-- Product image-->
-                                    <img class="card-img-top" src="@user.ProfilePhotoUrl" alt="..." />
+                                    <img class="card-img-top square-image" src="@user.ProfilePhotoUrl" alt="..." />
                                     <!-- Product details-->
                                     <div class="card-body p-4">
                                         <div class="text-center">

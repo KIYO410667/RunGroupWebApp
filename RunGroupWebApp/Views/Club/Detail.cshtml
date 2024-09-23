@@ -6,14 +6,14 @@
 }
 @section Styles {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/detail-page.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/club-detail.css" asp-append-version="true" />
 }
 
-        <!-- Product section-->
+       <!-- Product section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="@Model.Club.Image" alt="..." /></div>
+            <div class="col-md-6"><img class="card-img-top club-image mb-5 mb-md-0" src="@Model.Club.Image" alt="..." /></div>
                     <div class="col-md-6">
                         <div class="small mb-1">@Model.Club.ClubCategory</div>
                         <h1 class="display-5 fw-bolder">@Model.Club.Title</h1>
@@ -21,17 +21,27 @@
                         <span>@Model.Club.Address.City</span>
                         </div>
                     <p class="lead">@Model.Club.Description</p>
-                        <div class="d-flex">
+                <div class="d-flex gap-2">
                             <form asp-controller="AppUserClub" asp-action="Add" asp-route-id="@Model.Club.Id" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-outline-dark flex-shrink-0">
+                            <button type="submit" class="btn btn-outline-dark flex-shrink-0 btn-custom">
                                     <i class="bi bi-person-plus-fill"></i>
                                     參加
                                 </button>
                             </form>
                             @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
                             {
-                        <a asp-controller="Club" asp-action="Edit" asp-route-id="@Model.Club.Id" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
-                        <a asp-controller="Club" asp-action="Delete" asp-route-id="@Model.Club.Id" type="button" class="btn btn-sm btn-outline-secondary">Delete</a>
+                                <a asp-controller="Club" asp-action="Edit" asp-route-id="@Model.Club.Id">
+                                    <button type="button" class="btn btn-outline-dark flex-shrink-0 btn-custom">
+                                        <i class="bi bi-pencil-square"></i>
+                                        編輯
+                                    </button>
+                                </a>
+                                <a asp-controller="Club" asp-action="Delete" asp-route-id="@Model.Club.Id">
+                                <button type="button" class="btn btn-outline-dark flex-shrink-0 btn-custom">
+                                        <i class="bi bi-trash-fill"></i>
+                                        刪除
+                                    </button>
+                                </a>
                             }
                         </div>
                     </div>
@@ -47,11 +57,11 @@
                 @if (Model.Club.AppUser != null)
                 {
                     <div class="col mb-5">
-                        <div class="card h-100">
+                        <div class="user-card h-100">
                             <!-- Sale badge-->
                             <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">發起人</div>
                             <!-- Product image-->
-                            <img class="card-img-top" src="@Model.Club.AppUser.ProfilePhotoUrl" alt="..." />
+                            <img class="card-img-top square-image" src="@Model.Club.AppUser.ProfilePhotoUrl" alt="..." />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -72,9 +82,9 @@
                 @foreach (var user in Model.AppUsers)
                 {
                     <div class="col mb-5">
-                        <div class="card h-100">
+                        <div class="user-card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="@user.ProfilePhotoUrl" alt="..." />
+                            <img class="card-img-top square-image" src="@user.ProfilePhotoUrl" alt="..." />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -93,7 +103,10 @@
                 }
                 </div>
             </div>
-        </section>
+        </section> 
+
+
+
         @section Scripts {
             <!-- Bootstrap core JS-->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
