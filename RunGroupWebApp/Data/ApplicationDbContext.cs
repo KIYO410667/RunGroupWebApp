@@ -49,10 +49,9 @@ namespace RunGroupWebApp.Data
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(c => c.Address)
-                    .WithOne(a => a.Club)
-                    .HasForeignKey<Club>(c => c.AddressId)
-                    .IsRequired(true)
-                    .OnDelete(DeleteBehavior.Cascade);
+                        .WithOne(a => a.Club)
+                        .HasForeignKey<Club>(c => c.AddressId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasIndex(c => c.Id).IsUnique().HasDatabaseName("IX_ClubId");
                 entity.HasIndex(c => c.AppUserId).HasDatabaseName("IX_CreatedClubAppUserId");
@@ -62,8 +61,7 @@ namespace RunGroupWebApp.Data
             modelBuilder.Entity<Address>(entity =>
             {
                 entity.HasKey(a => a.Id);
-
-                entity.HasIndex(a => a.Id).IsUnique().HasDatabaseName("IX_AddressId");
+                entity.HasIndex(a => a.Id).HasDatabaseName("IX_AddressId");
             });
 
             // AppUser
@@ -71,9 +69,9 @@ namespace RunGroupWebApp.Data
             {
                 entity.HasOne(u => u.Address)
                     .WithOne(a => a.AppUser)
-                    .HasForeignKey<AppUser>(u => u.AddressId)
+                    .HasForeignKey<AppUser>(u => u.AddressId) 
                     .IsRequired(false)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasIndex(u => u.Id).IsUnique().HasDatabaseName("IX_AppUserId");
             });

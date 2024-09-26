@@ -84,6 +84,10 @@ namespace RunGroupWebApp.Controllers
             }
 
             //3. Update other user's properties
+            if (currentUser.Address == null)
+            {
+                currentUser.Address = new Address();
+            }
             currentUser.Bio = editUserVM.Bio;
             currentUser.Address.City = editUserVM.Address.City;
             currentUser.Address.Street = editUserVM.Address.Street;

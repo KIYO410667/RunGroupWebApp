@@ -42,7 +42,7 @@ namespace RunGroupWebApp.Controllers
                 UserName = result.UserName,
                 Bio = result.Bio,
                 ProfilePhotoUrl = result.ProfilePhotoUrl,
-                city = result.City,
+                city = result.Address.City,
                 ClubNumber = clubs.Count(),
                 clubs = clubs
             };

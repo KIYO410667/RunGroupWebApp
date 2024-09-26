@@ -82,7 +82,7 @@ namespace RunGroupWebApp.Controllers
                     {
                         Street = ClubVM.Address.Street,
                         City = ClubVM.Address.City
-                    }
+                    },
                 };
 
                 _clubRepository.Add(club);

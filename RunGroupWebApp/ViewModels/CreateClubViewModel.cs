@@ -13,5 +13,6 @@ namespace RunGroupWebApp.ViewModels
         public ClubCategory ClubCategory { get; set; }
 
         public string AppUserId { get; set; }
+        public int AddressId { get; set; }
     }
 }
