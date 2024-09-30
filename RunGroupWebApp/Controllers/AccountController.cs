@@ -4,7 +4,6 @@ using RunGroupWebApp.Data;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RunGroupWebApp.Controllers
 {
@@ -17,15 +16,9 @@ namespace RunGroupWebApp.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public async Task<IActionResult> Login(string errorMessage = null)
+        public async Task<IActionResult> Login()
         {
-            var loginVM = new LoginViewModel()
-            {
-            }; // Replace with your actual ViewModel initialization logic
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                ModelState.AddModelError(string.Empty, errorMessage);
-            }
+            var loginVM = new LoginViewModel();
             return View(loginVM);
         }
 
@@ -37,29 +30,22 @@ namespace RunGroupWebApp.Controllers
                 return View(LoginVM);
             }
 
-            // 查找用户
             var user = await _userManager.FindByEmailAsync(LoginVM.Email);
-
             if (user == null)
             {
-                // 用户不存在，返回错误信息
-                //ViewBag.ErrorMessage = "Invalid login attempt. Email not found.";
-                ModelState.AddModelError(string.Empty, "Invalid login attempt. 無效的登入嘗試");
+                ModelState.AddModelError("Email", "Invalid login attempt. Please try again.");
                 return View(LoginVM);
             }
 
-            // 验证密码
             var passwordCheck = await _userManager.CheckPasswordAsync(user, LoginVM.Password);
 
             if (!passwordCheck)
             {
-                // 密码不正确，返回错误信息
-                //ViewBag.ErrorMessage = "Invalid login attempt. Incorrect password.";
-                ModelState.AddModelError(string.Empty, "Invalid login attempt. 無效的登入嘗試");
+                ModelState.AddModelError("Password", "Invalid login attempt. Please try again.");
+                ModelState.Clear();
                 return View(LoginVM);
             }
 
-            // 如果Email和密码都正确，则登录用户
             await _signInManager.SignInAsync(user, isPersistent: false);
             return RedirectToAction("Index", "Home");
         }
@@ -82,7 +68,8 @@ namespace RunGroupWebApp.Controllers
             var existingUser = await _userManager.FindByEmailAsync(registerVM.Email);
             if (existingUser != null)
             {
-                ViewBag.ErrorMessage = "此電子郵件已註冊，請重試";
+                ModelState.AddModelError("Email", "此電子郵件已註冊，請重試");
+                //ViewBag.ErrorMessage = "此電子郵件已註冊，請重試";
                 return View(registerVM);
             }
 
@@ -97,7 +84,7 @@ namespace RunGroupWebApp.Controllers
 
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Code);
+                ModelState.AddModelError("string.Empty", error.Code);
             }
             return View(registerVM);
         }
