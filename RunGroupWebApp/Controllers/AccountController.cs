@@ -42,7 +42,6 @@ namespace RunGroupWebApp.Controllers
             if (!passwordCheck)
             {
                 ModelState.AddModelError("Password", "Invalid login attempt. Please try again.");
-                ModelState.Clear();
                 return View(LoginVM);
             }
 
