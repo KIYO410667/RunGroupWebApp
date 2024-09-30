@@ -167,83 +167,116 @@ namespace RunGroupWebApp.Controllers
         // New method to handle the callback from Google
         public async Task<IActionResult> ExternalLoginCallback(string remoteError = null)
         {
-            if (remoteError != null)
+            try
             {
-                if (remoteError == "access_denied")
+                if (remoteError != null)
                 {
-                    return RedirectToAction("AccessDenied", new { errorMessage = "You canceled the Google login process. Please try again or use another login method." });
+                    if (remoteError == "access_denied")
+                    {
+                        _logger.LogWarning("User canceled the Google login process.");
+                        return RedirectToAction("AccessDenied", new { errorMessage = "You canceled the Google login process. Please try again or use another login method." });
+                    }
+                    _logger.LogError($"Error from external provider: {remoteError}");
+                    return View("AccessDenied");
                 }
-                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
-                return View("AccessDenied");
-            }
 
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                return RedirectToAction("Login", new { errorMessage = "There was an issue with the external login. Please try again." });
-            }
-
-            // Attempt to sign in the user with the external login provider
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
-
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var photoUrl = info.Principal.FindFirstValue("picture");
-
-            if (result.Succeeded)
-            {
-                // User has successfully logged in
-                var user = await _userManager.FindByEmailAsync(email);
-                if (user != null && user.ProfilePhotoUrl != photoUrl)
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
                 {
-                    // Update photo URL if it has changed
-                    user.ProfilePhotoUrl = photoUrl;
-                    await _userManager.UpdateAsync(user);
+                    _logger.LogError("External login info is null.");
+                    return RedirectToAction("Login", new { errorMessage = "There was an issue with the external login. Please try again." });
                 }
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                // If the user does not have an account, then we need to create one
-                if (email != null)
+
+                // Attempt to sign in the user with the external login provider
+                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var photoUrl = info.Principal.FindFirstValue("picture");
+
+                if (result.Succeeded)
                 {
+                    // User has successfully logged in
                     var user = await _userManager.FindByEmailAsync(email);
-                    if (user == null)
+                    if (user != null && user.ProfilePhotoUrl != photoUrl)
                     {
-                        user = new AppUser
+                        // Update photo URL if it has changed
+                        user.ProfilePhotoUrl = photoUrl;
+                        var updateResult = await _userManager.UpdateAsync(user);
+                        if (updateResult.Succeeded)
                         {
-                            UserName = email,
-                            Email = email,
-                            ProfilePhotoUrl = photoUrl
-                        };
-                        var createResult = await _userManager.CreateAsync(user);
-                        if (!createResult.Succeeded)
-                        {
-                            ModelState.AddModelError(string.Empty, "Error creating user account.");
-                            return View("Login");
+                            _logger.LogInformation("User profile photo updated successfully.");
                         }
-                        await _userManager.AddToRoleAsync(user, UserRoles.User);
-                    }
-                    else
-                    {
-                        // Existing user, update photo if necessary
-                        if (user.ProfilePhotoUrl != photoUrl)
+                        else
                         {
-                            user.ProfilePhotoUrl = photoUrl;
-                            await _userManager.UpdateAsync(user);
+                            _logger.LogError("Failed to update user profile photo.");
                         }
                     }
-
-                    // Add the external login to the user account
-                    await _userManager.AddLoginAsync(user, info);
-
-                    // Sign in the user
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-
+                    _logger.LogInformation("User logged in successfully.");
                     return RedirectToAction("Index", "Home");
                 }
+                else
+                {
+                    if (email != null)
+                    {
+                        var user = await _userManager.FindByEmailAsync(email);
+                        if (user == null)
+                        {
+                            user = new AppUser
+                            {
+                                UserName = email,
+                                Email = email,
+                                ProfilePhotoUrl = photoUrl
+                            };
+                            var createResult = await _userManager.CreateAsync(user);
+                            if (!createResult.Succeeded)
+                            {
+                                _logger.LogError("Failed to create user account.");
+                                ModelState.AddModelError(string.Empty, "Error creating user account.");
+                                return View("Login");
+                            }
+                            await _userManager.AddToRoleAsync(user, UserRoles.User);
+                            _logger.LogInformation("New user account created and assigned role.");
+                        }
+                        else
+                        {
+                            // Existing user, update photo if necessary
+                            if (user.ProfilePhotoUrl != photoUrl)
+                            {
+                                user.ProfilePhotoUrl = photoUrl;
+                                var updateResult = await _userManager.UpdateAsync(user);
+                                if (!updateResult.Succeeded)
+                                {
+                                    _logger.LogError("Failed to update existing user's profile photo.");
+                                }
+                            }
+                            _logger.LogInformation("Existing user found, updated profile photo if necessary.");
+                        }
+
+                        // Add the external login to the user account
+                        await _userManager.AddLoginAsync(user, info);
+
+                        // Sign in the user
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+
+                        _logger.LogInformation("User signed in successfully after linking external login.");
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    _logger.LogError("Email not found from external login.");
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the external login process.");
                 return View("Error");
             }
+            finally
+            {
+                _logger.LogInformation("External login process completed.");
+            }
         }
+
 
         [HttpGet]
         public IActionResult AccessDenied()
