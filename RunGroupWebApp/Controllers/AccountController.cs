@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RunGroupWebApp.Data;
+using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace RunGroupWebApp.Controllers
@@ -11,15 +15,32 @@ namespace RunGroupWebApp.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        private readonly ILogger<AccountController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public AccountController(UserManager<AppUser> userManager
+            , SignInManager<AppUser> signInManager
+            , ILogger<AccountController> logger
+            , IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
+            _unitOfWork = unitOfWork;
         }
+
         public async Task<IActionResult> Login()
         {
-            var loginVM = new LoginViewModel();
-            return View(loginVM);
+            try
+            {
+                var loginVM = new LoginViewModel();
+                return View(loginVM);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred in Login GET action");
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -30,30 +51,47 @@ namespace RunGroupWebApp.Controllers
                 return View(LoginVM);
             }
 
-            var user = await _userManager.FindByEmailAsync(LoginVM.Email);
-            if (user == null)
+            try
             {
-                ModelState.AddModelError("Email", "Invalid login attempt. Please try again.");
+                var user = await _userManager.FindByEmailAsync(LoginVM.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("Email", "Invalid login attempt. Please try again.");
+                    return View(LoginVM);
+                }
+
+                var passwordCheck = await _userManager.CheckPasswordAsync(user, LoginVM.Password);
+
+                if (!passwordCheck)
+                {
+                    ModelState.AddModelError("Password", "Invalid login attempt. Please try again.");
+                    return View(LoginVM);
+                }
+
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred in Login POST action");
+                ModelState.AddModelError(string.Empty, "An error occurred during login. Please try again.");
                 return View(LoginVM);
             }
-
-            var passwordCheck = await _userManager.CheckPasswordAsync(user, LoginVM.Password);
-
-            if (!passwordCheck)
-            {
-                ModelState.AddModelError("Password", "Invalid login attempt. Please try again.");
-                return View(LoginVM);
-            }
-
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            return RedirectToAction("Index", "Home");
         }
 
 
         public IActionResult Register()
         {
-            var registerVM = new RegisterViewModel();
-            return View(registerVM);
+            try
+            {
+                var registerVM = new RegisterViewModel();
+                return View(registerVM);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred in Register GET action");
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -63,43 +101,67 @@ namespace RunGroupWebApp.Controllers
             {
                 return View(registerVM);
             }
-
-            var existingUser = await _userManager.FindByEmailAsync(registerVM.Email);
-            if (existingUser != null)
+            try
             {
-                ModelState.AddModelError("Email", "此電子郵件已註冊，請重試");
-                //ViewBag.ErrorMessage = "此電子郵件已註冊，請重試";
+                var existingUser = await _userManager.FindByEmailAsync(registerVM.Email);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("Email", "此電子郵件已註冊，請重試");
+                    return View(registerVM);
+                }
+
+                var user = new AppUser { UserName = registerVM.Email, Email = registerVM.Email };
+
+                var result = await _userManager.CreateAsync(user, registerVM.Password);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, UserRoles.User);
+                    return RedirectToAction("Index", "Home");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("string.Empty", error.Code);
+                }
+                return View(registerVM);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred in Register POST action");
+                ModelState.AddModelError(string.Empty, "An error occurred during registration. Please try again.");
                 return View(registerVM);
             }
 
-            var user = new AppUser { UserName = registerVM.Email, Email = registerVM.Email };
-
-            var result = await _userManager.CreateAsync(user, registerVM.Password);
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.User);
-                return RedirectToAction("Index", "Home");
-            }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("string.Empty", error.Code);
-            }
-            return View(registerVM);
         }
 
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            try
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred in Logout action");
+                return View("Error");
+            }
         }
 
         [HttpPost]
         public IActionResult ExternalLogin(string provider)
         {
-            var redirectUrl = Url.Action("ExternalLoginCallback", "Account");
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return Challenge(properties, provider);
+            try
+            {
+                var redirectUrl = Url.Action("ExternalLoginCallback", "Account");
+                var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+                return Challenge(properties, provider);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred in ExternalLogin action");
+                return View("Error");
+            }
         }
 
         // New method to handle the callback from Google
@@ -182,6 +244,7 @@ namespace RunGroupWebApp.Controllers
                 return View("Error");
             }
         }
+
         [HttpGet]
         public IActionResult AccessDenied()
         {
