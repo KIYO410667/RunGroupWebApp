@@ -29,7 +29,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppUserClubRepository, AppUserClubRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Configuration.AddUserSecrets<Program>();
 builder.Services.Configure<AzureStorageConfig>(builder.Configuration.GetSection("AzureStorageConfig"));
