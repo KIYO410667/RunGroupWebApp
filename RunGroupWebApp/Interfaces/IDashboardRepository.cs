@@ -5,7 +5,7 @@ namespace RunGroupWebApp.Interfaces
     public interface IDashboardRepository
     {
         Task<List<Club>> GetAllUserClub();
-        Task<AppUser> GetUserById(string id);
+        Task<AppUser> GetUserById();
 
         bool Update(AppUser user);
         bool Save();

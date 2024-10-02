@@ -13,24 +13,21 @@ namespace RunGroupWebApp.Controllers
     public class DashboardController : Controller
     {
         private readonly IDashboardRepository _dashboardRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAzureBlobService _azureBlobService;
 
-        public DashboardController(IDashboardRepository dashboardRepository, IHttpContextAccessor httpContextAccessor,
+        public DashboardController(IDashboardRepository dashboardRepository,
             IAzureBlobService azureBlobService)
         {
             _dashboardRepository = dashboardRepository;
-            _httpContextAccessor = httpContextAccessor;
             _azureBlobService = azureBlobService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var dashboardVM = new DashboardViewModel()
             {
                 Clubs = await _dashboardRepository.GetAllUserClub(),
-                appUser = await _dashboardRepository.GetUserById(userId)
+                appUser = await _dashboardRepository.GetUserById()
             };
 
             return View(dashboardVM);
@@ -38,13 +35,12 @@ namespace RunGroupWebApp.Controllers
 
         public async Task<IActionResult> EditUserProfile()
         {
-            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentUser = await _dashboardRepository.GetUserById(userId);
+            var currentUser = await _dashboardRepository.GetUserById();
             if (currentUser == null) { return View("Error"); }
 
             var editUserVM = new EditUserProfileViewModel
             {
-                Id = userId,
+                Id = currentUser.Id,
                 UserName = currentUser.UserName,
                 Bio = currentUser.Bio,
                 ProfilePhotoUrl = currentUser.ProfilePhotoUrl,
@@ -58,13 +54,11 @@ namespace RunGroupWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "輸入失敗，請重新嘗試");
                 return View(editUserVM);
             }
 
             // 1. retrieve the current user
-            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentUser = await _dashboardRepository.GetUserById(userId);
+            var currentUser = await _dashboardRepository.GetUserById();
             if (currentUser == null) { return View("Error"); }
 
             // 2. Try to delete the existing photo, considering the case where it might not exist
@@ -78,7 +72,6 @@ namespace RunGroupWebApp.Controllers
                 {
                     // Log the exception, but continue with the update process
                     // The photo might not exist, or there might be other issues
-                    ModelState.AddModelError(string.Empty, "圖片刪除失敗");
                     return View(editUserVM);
                 }
             }

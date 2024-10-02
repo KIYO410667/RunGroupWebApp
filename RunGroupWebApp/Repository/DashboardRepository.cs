@@ -20,18 +20,15 @@ namespace RunGroupWebApp.Repository
         }
         public async Task<List<Club>> GetAllUserClub()
         {
-
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // 根據用戶ID過濾文章
-            return await _context.Clubs
-                                 .Where(a => a.AppUser.Id == userId).ToListAsync();
+            return await _context.Clubs.Where(a => a.AppUser.Id == userId).ToListAsync();
         }
 
 
-        public async Task<AppUser> GetUserById(string id)
+        public async Task<AppUser> GetUserById()
         {
-            return await _context.Users.Include(a => a.Address).FirstOrDefaultAsync(u => u.Id == id);
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return await _context.Users.Include(a => a.Address).FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         public bool Save()
