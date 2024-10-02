@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RunGroupWebApp.Controllers;
 using RunGroupWebApp.Data;
@@ -15,13 +16,15 @@ namespace RunGroupWebApp.Tests.Controllers
     {
         private readonly Mock<UserManager<AppUser>> _mockUserManager;
         private readonly Mock<SignInManager<AppUser>> _mockSignInManager;
+        private readonly Mock<ILogger<AccountController>> _mockLogger;
         private readonly AccountController _controller;
 
         public AccountControllerTests()
         {
             _mockUserManager = MockUserManager<AppUser>();
             _mockSignInManager = MockSignInManager();
-            _controller = new AccountController(_mockUserManager.Object, _mockSignInManager.Object);
+            _mockLogger = new Mock<ILogger<AccountController>>();
+            _controller = new AccountController(_mockUserManager.Object, _mockSignInManager.Object, _mockLogger.Object);
         }
 
         [Fact]
