@@ -1,10 +1,11 @@
 ﻿using RunGroupWebApp.Models;
+using RunGroupWebApp.ViewModels;
 
 namespace RunGroupWebApp.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<AppUser>> GetAllUser();
+        Task<List<UserViewModel>> GetAllUser();
         Task<AppUser> GetUserById(string id);
         Task<List<Club>> GetClubsByUserId(string userId);
         bool Add(AppUser user);

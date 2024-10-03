@@ -2,6 +2,7 @@
 using RunGroupWebApp.Data;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
+using RunGroupWebApp.ViewModels;
 
 namespace RunGroupWebApp.Repository
 {
@@ -25,9 +26,17 @@ namespace RunGroupWebApp.Repository
             return Save();
         }
 
-        public async Task<IEnumerable<AppUser>> GetAllUser()
+        public async Task<List<UserViewModel>> GetAllUser()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.
+                Select(c => new UserViewModel()
+                {
+                    Id = c.Id,
+                    UserName = c.UserName,
+                    Bio = c.Bio,
+                    ProfilePhotoUrl = c.ProfilePhotoUrl
+                })
+                .ToListAsync();
         }
 
         public async Task<AppUser> GetUserById(string id)

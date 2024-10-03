@@ -18,18 +18,7 @@ namespace RunGroupWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var results = await _userRepository.GetAllUser();
-            List<UserViewModel> userVms = new List<UserViewModel>();
-            foreach (AppUser user in results)
-            {
-                UserViewModel userVM = new UserViewModel()
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Bio = user.Bio,
-                    ProfilePhotoUrl = user.ProfilePhotoUrl,                };
-                userVms.Add(userVM);
-            }
-            return View(userVms);
+            return View(results);
         }
 
         public async Task<IActionResult> Detail(string id)
@@ -48,6 +37,5 @@ namespace RunGroupWebApp.Controllers
             };
             return View(userVM);
         }
-
     }
 }
