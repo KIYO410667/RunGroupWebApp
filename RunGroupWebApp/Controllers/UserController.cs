@@ -8,34 +8,50 @@ namespace RunGroupWebApp.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, ILogger<UserController> logger)
         {
             _userRepository = userRepository;
+            _logger = logger;
         }
 
         [HttpGet("users")]
         public async Task<IActionResult> Index()
         {
-            var results = await _userRepository.GetAllUser();
-            return View(results);
+            try
+            {
+                _logger.LogInformation("Fetching all users");
+                var results = await _userRepository.GetAllUser();
+                _logger.LogInformation($"Retrieved {results.Count()} users");
+                return View(results);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching all users");
+                return View("Error");
+            }
         }
 
         public async Task<IActionResult> Detail(string id)
         {
-            var result = await _userRepository.GetUserById(id);
-            var clubs = await _userRepository.GetClubsByUserId(id);
-            var userVM = new UserViewModel()
+            try
             {
-                Id = result.Id,
-                UserName = result.UserName,
-                Bio = result.Bio,
-                ProfilePhotoUrl = result.ProfilePhotoUrl,
-                city = result.Address.City,
-                ClubNumber = clubs.Count(),
-                clubs = clubs
-            };
-            return View(userVM);
+                _logger.LogInformation($"Fetching details for user with ID: {id}");
+                var result = await _userRepository.GetUserSummaryById(id);
+                if (result == null)
+                {
+                    _logger.LogWarning($"User with ID {id} not found");
+                    return View("Error");
+                }
+                _logger.LogInformation($"Returning detail view for user {id}");
+                return View(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while fetching details for user {id}");
+                return View("Error");
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ namespace RunGroupWebApp.ViewModels
         public string? Bio { get; set; }
         public string? ProfilePhotoUrl { get; set; }
         public City? city { get; set; }
-        public int ClubNumber { get; set; } = 0;
-        public List<Club> clubs { get; set; }
+        public int? ClubNumber { get; set; } = 0;
+        public List<Club>? clubs { get; set; }
     }
 }

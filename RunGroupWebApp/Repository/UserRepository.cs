@@ -3,6 +3,7 @@ using RunGroupWebApp.Data;
 using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace RunGroupWebApp.Repository
 {
@@ -39,9 +40,19 @@ namespace RunGroupWebApp.Repository
                 .ToListAsync();
         }
 
-        public async Task<AppUser> GetUserById(string id)
+        public async Task<UserViewModel> GetUserSummaryById(string id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users
+                .Select(c => new UserViewModel()
+                {
+                    Id = c.Id,
+                    UserName = c.UserName,
+                    Bio = c.Bio,
+                    ProfilePhotoUrl = c.ProfilePhotoUrl,
+                    city = c.Address.City,
+                    ClubNumber = c.CreatedClubs.Count(),
+                    clubs = c.CreatedClubs.ToList()
+                }).FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<List<Club>> GetClubsByUserId(string userId)
