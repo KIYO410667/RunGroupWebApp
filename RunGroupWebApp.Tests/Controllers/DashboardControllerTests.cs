@@ -10,7 +10,7 @@ using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
 using Xunit;
 
-namespace RunGroupWebApp.Tests
+namespace RunGroupWebApp.Tests.Controllers
 {
     public class DashboardControllerTests
     {
