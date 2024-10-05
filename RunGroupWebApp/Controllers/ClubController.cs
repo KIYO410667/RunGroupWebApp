@@ -13,18 +13,21 @@ namespace RunGroupWebApp.Controllers
         private readonly IClubRepository _clubRepository;
         private readonly IAzureBlobService _azureBlobService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<ClubController> _logger;
 
         public ClubController(IClubRepository clubRepository, IAzureBlobService azureBlobService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, ILogger<ClubController> logger)
         {
             _clubRepository = clubRepository;
             _azureBlobService = azureBlobService;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         private const int PageSize = 9; // 3x3 grid
         public async Task<IActionResult> Index(string keyword, ClubCategory? category, City? city, int page = 1)
         {
+            _logger.LogInformation($"Index action called with keyword: {keyword}, category: {category}, city: {city}, page: {page}");
             // Store search parameters in ViewData for use in pagination links and form repopulation
             ViewData["Keyword"] = keyword;
             ViewData["Category"] = category?.ToString();
@@ -40,8 +43,9 @@ namespace RunGroupWebApp.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
+            _logger.LogInformation($"Detail action called for club id: {id}");
             Club club = await _clubRepository.GetClubWithAppUserById(id);
-            if(club == null) return View("Error");
+            if (club == null) return View("Error");
             List<AppUser> users = await _clubRepository.GetAllUsers(id);
             ClubWithUsersViewModel clubUsers = new ClubWithUsersViewModel()
             {
@@ -53,6 +57,7 @@ namespace RunGroupWebApp.Controllers
 
         public IActionResult Create()
         {
+            _logger.LogInformation("Create action called");
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var clubVM = new CreateClubViewModel { AppUserId = userId };
             return View(clubVM);
@@ -61,8 +66,10 @@ namespace RunGroupWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateClubViewModel ClubVM)
         {
+            _logger.LogInformation("Create POST action called");
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Invalid ModelState in Create POST action");
                 return View(ClubVM);
             }
 
@@ -87,14 +94,16 @@ namespace RunGroupWebApp.Controllers
 
                 _clubRepository.Add(club);
 
+                _logger.LogInformation($"New club created with id: {club.Id}");
                 return RedirectToAction("Index", new { message = "Photo uploaded successfully!" });
             }
         }
 
         public async Task<IActionResult> Edit(int id)
         {
+            _logger.LogInformation($"Edit action called for club id: {id}");
             var club = await _clubRepository.GetById(id);
-            if(club == null) return View("Error");
+            if (club == null) return View("Error");
             var clubVM = new EditClubViewModel
             {
                 Title = club.Title,
@@ -110,8 +119,10 @@ namespace RunGroupWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EditClubViewModel clubVM)
         {
+            _logger.LogInformation($"Edit POST action called for club id: {id}");
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Invalid ModelState in Edit POST action");
                 ModelState.AddModelError(string.Empty, "輸入失敗，請重新嘗試");
                 return View(clubVM);
             }
@@ -121,6 +132,7 @@ namespace RunGroupWebApp.Controllers
 
             if (userClub == null)
             {
+                _logger.LogWarning($"Club not found for edit, id: {id}");
                 return View("Error");
             }
 
@@ -135,6 +147,7 @@ namespace RunGroupWebApp.Controllers
                 {
                     // Log the exception, but continue with the update process
                     // The photo might not exist, or there might be other issues
+                    _logger.LogError(ex, $"Failed to delete existing photo for club id: {id}");
                     ModelState.AddModelError(string.Empty, "圖片刪除失敗");
                     return View(clubVM);
                 }
@@ -156,26 +169,28 @@ namespace RunGroupWebApp.Controllers
                     var blobUrl = await _azureBlobService.UploadPhotoAsync(stream, fileName);
                     if (blobUrl == null)
                     {
+                        _logger.LogError($"Failed to upload new photo for club id: {id}");
                         ModelState.AddModelError("Image", "Photo upload failed");
                         return View(clubVM);
                     }
                     userClub.Image = blobUrl; //only change the Image URL
                 }
             }
-            
+
             // 4. Update the model
             _clubRepository.Update(userClub);
 
+            _logger.LogInformation($"Club updated successfully, id: {id}");
             return RedirectToAction("Index");
         }
 
-
-
         public async Task<IActionResult> Delete(int id)
         {
+            _logger.LogInformation($"Delete action called for club id: {id}");
             var club = await _clubRepository.GetById(id);
             if (club == null)
             {
+                _logger.LogWarning($"Club not found for delete, id: {id}");
                 return View("Error");
             }
             return View(club);
@@ -185,9 +200,11 @@ namespace RunGroupWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            _logger.LogInformation($"DeleteConfirmed action called for club id: {id}");
             var club = await _clubRepository.GetByIdIncludeAppUserClub(id);
             if (club == null)
             {
+                _logger.LogWarning($"Club not found for delete confirmation, id: {id}");
                 return View("Error");
             }
 
@@ -202,6 +219,7 @@ namespace RunGroupWebApp.Controllers
                 {
                     // Log the exception, but continue with the deletion process
                     // The photo might not exist, or there might be other issues
+                    _logger.LogError(ex, $"Failed to delete photo for club id: {id}");
                     ModelState.AddModelError(string.Empty, "圖片刪除失敗，但會繼續刪除俱樂部資料");
                 }
             }
@@ -211,13 +229,13 @@ namespace RunGroupWebApp.Controllers
                 // Delete the club from the database
                 _clubRepository.Delete(club);
 
-
+                _logger.LogInformation($"Club deleted successfully, id: {id}");
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException ex)
             {
                 // Log the exception
-                //_logger.LogError(ex, "Error deleting club {ClubId}", id);
+                _logger.LogError(ex, $"Error deleting club {id}");
                 ModelState.AddModelError(string.Empty, "刪除俱樂部時發生錯誤。可能是因為此俱樂部仍有關聯的數據。");
                 return View(club);
             }
