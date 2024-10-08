@@ -6,7 +6,7 @@ This is a web application built using ASP.NET Core MVC. The project follows the 
 - Developed using ASP.NET Core MVC for the backend.
 - Razor templates are used to generate dynamic web pages.
 - Integrated with Azure for deployment.
-- SQL Server is used as the primary database.
+- Azure SQL Databases is used as the primary database.
 - Implements user authentication and role management.
 ## Tech Stack
 - Backend: ASP.NET Core MVC
@@ -14,32 +14,32 @@ This is a web application built using ASP.NET Core MVC. The project follows the 
 - Database: MSSQL -> Azure SQL Databases
 - Unstructurized NoSQL: Azure Blob
 - Deployment: Azure App Service
-- Authenticaton: Cookie&Session / OAuth2
+- Authenticaton: Cookie & Session, OAuth2
 - Other Tools: Entity Framework Core, Bootstrap
 ## Installation
-Clone the repository:
-bash
-Copy code
-git clone https://github.com/your-username/your-project-name.git
-Navigate to the project folder:
-bash
-Copy code
-cd your-project-name
-Restore dependencies:
-bash
-Copy code
+### Clone the repository:
+```bash
+git clone https://github.com/KIYO410667/RunGroupWebApp.git
+```
+### Navigate to the project folder:
+```bash
+cd RunGroupWebApp
+```
+### Restore dependencies:
+```bash
 dotnet restore
-Apply database migrations (if using Entity Framework):
-bash
-Copy code
+```
+### Apply database migrations:
+```bash
 dotnet ef database update
-Run the application:
-bash
-Copy code
+```
+### Run the application:
+```bash
 dotnet run
-# Future Plans (Optional)
+```
+# Future Plans
 - Refactor frontend using React or Vue.js to achieve a front-end and back-end separation.
 - Implement a RESTful API to allow the frontend to interact with the backend.
-
+- Replace Azure Blob with structured NoSQL
 # Screenshots
 (Include any relevant screenshots of your application)
