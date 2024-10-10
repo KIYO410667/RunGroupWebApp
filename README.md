@@ -16,6 +16,8 @@ This is a web application built using ASP.NET Core MVC. The project follows the 
 - Deployment: Azure App Service
 - Authenticaton: Cookie & Session, OAuth2
 - Other Tools: Entity Framework Core, Bootstrap
+## ER Diagram
+![RunGroupsERmodel drawio](https://github.com/user-attachments/assets/705310e8-a9a7-4b46-b90d-98253183a43c)
 ## Installation
 ### Clone the repository:
 ```bash
