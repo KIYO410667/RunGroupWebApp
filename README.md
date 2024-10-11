@@ -8,6 +8,9 @@ This is a web application built using ASP.NET Core MVC. The project follows the 
 - Integrated with Azure for deployment.
 - Azure SQL Databases is used as the primary database.
 - Implements user authentication and role management.
+- Uses Repositoy Pattern and Dependency Injection
+- Apply Code First and Fluent API for Database Migrations
+
 ## Tech Stack
 - Backend: ASP.NET Core MVC
 - Frontend: Razor (server-side rendering)
