@@ -8,8 +8,7 @@ namespace RunGroupWebApp.Interfaces
         Task<AppUserClub> GetByIdAsync(int clubId);
         Task<List<AppUser>> GetAllUsers(int clubId);
 
-        bool Add(AppUserClub userClub);
-        bool Save();
-        bool Delete(AppUserClub userClub);
+        void Add(AppUserClub userClub);
+        void Delete(AppUserClub userClub);
     }
 }

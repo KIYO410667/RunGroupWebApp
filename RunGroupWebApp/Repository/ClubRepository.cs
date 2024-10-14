@@ -16,25 +16,17 @@ namespace RunGroupWebApp.Repository
             _context = context;
         }
 
-        public bool Save()
-        {
-            var result = _context.SaveChanges();
-            return result > 0 ? true : false;
-        }
-        public bool Add(Club club)
+        public void Add(Club club)
         {
             _context.Clubs.Add(club);
-            return Save();
         }
-        public bool Delete(Club club)
+        public void Delete(Club club)
         {
             _context.Clubs.Remove(club);
-            return Save();
         }
-        public bool Update(Club club)
+        public void Update(Club club)
         {
             _context.Update(club);
-            return Save();
         }
         public async Task<IEnumerable<Club>> GetAll()
         {

@@ -31,16 +31,10 @@ namespace RunGroupWebApp.Repository
             return await _context.Users.Include(a => a.Address).FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-        public bool Save()
-        {
-            var result = _context.SaveChanges();
-            return result > 0 ? true : false;
-        }
 
-        public bool Update(AppUser user)
+        public void Update(AppUser user)
         {
             _context.Users.Update(user);
-            return Save();
         }
     }
 }

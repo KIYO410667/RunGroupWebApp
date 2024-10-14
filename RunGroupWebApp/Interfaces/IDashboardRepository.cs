@@ -7,7 +7,6 @@ namespace RunGroupWebApp.Interfaces
         Task<List<Club>> GetAllUserClub();
         Task<AppUser> GetUserById();
 
-        bool Update(AppUser user);
-        bool Save();
+        void Update(AppUser user);
     }
 }

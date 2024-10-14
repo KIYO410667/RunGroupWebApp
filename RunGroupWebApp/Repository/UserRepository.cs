@@ -15,16 +15,14 @@ namespace RunGroupWebApp.Repository
             _context = context;
         }
 
-        public bool Add(AppUser user)
+        public void Add(AppUser user)
         {
             _context.Users.Add(user);
-            return Save();
         }
 
-        public bool Delete(AppUser user)
+        public void Delete(AppUser user)
         {
             _context.Users.Remove(user);
-            return Save();
         }
 
         public async Task<List<UserViewModel>> GetAllUser()
@@ -60,16 +58,9 @@ namespace RunGroupWebApp.Repository
             return await _context.Clubs.Where(au => au.AppUserId == userId).ToListAsync();
         }
 
-        public bool Save()
-        {
-            var result = _context.SaveChanges();
-            return result > 0 ? true : false;
-        }
-
-        public bool Update(AppUser user)
+        public void Update(AppUser user)
         {
             _context.Users.Update(user);
-            return Save();
         }
     }
 }

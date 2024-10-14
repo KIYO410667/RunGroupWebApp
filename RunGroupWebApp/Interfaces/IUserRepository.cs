@@ -8,9 +8,8 @@ namespace RunGroupWebApp.Interfaces
         Task<List<UserViewModel>> GetAllUser();
         Task<UserViewModel> GetUserSummaryById(string id);
         Task<List<Club>> GetClubsByUserId(string userId);
-        bool Add(AppUser user);
-        bool Delete(AppUser user);
-        bool Update(AppUser user);
-        bool Save();
+        void Add(AppUser user);
+        void Delete(AppUser user);
+        void Update(AppUser user);
     }
 }

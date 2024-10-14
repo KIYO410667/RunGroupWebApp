@@ -17,22 +17,14 @@ namespace RunGroupWebApp.Repository
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public bool Add(AppUserClub userClub)
+        public void Add(AppUserClub userClub)
         {
             _context.AppUserClubs.Add(userClub);
-            return Save();
         }
 
-        public bool Delete(AppUserClub userClub)
+        public void Delete(AppUserClub userClub)
         {
             _context.AppUserClubs.Remove(userClub);
-            return Save();
-        }
-
-        public bool Save()
-        {
-            var result = _context.SaveChanges();
-            return result > 0 ? true : false;
         }
 
         public async Task<List<Club>> GetAllClubs()

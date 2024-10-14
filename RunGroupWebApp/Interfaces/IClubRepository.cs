@@ -19,9 +19,8 @@ namespace RunGroupWebApp.Interfaces
         Task<int> GetSearchResultsCountAsync(string keyword, ClubCategory? category, City? city);
         Task<IEnumerable<Club>> GetAllClubsByCity(string city);
         Task<List<Club>> GetClubsByUserId(string userId);
-        bool Add(Club club);
-        bool Update(Club club);
-        bool Delete(Club club);
-        bool Save();
+        void Add(Club club);
+        void Update(Club club);
+        void Delete(Club club);
     }
 }
