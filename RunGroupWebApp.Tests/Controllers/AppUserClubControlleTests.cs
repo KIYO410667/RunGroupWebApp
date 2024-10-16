@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RunGroupWebApp.Controllers;
-using RunGroupWebApp.Interfaces;
+using RunGroupWebApp.Interfaces.IReposiotry;
 using RunGroupWebApp.Models;
 using System;
 using System.Collections.Generic;
