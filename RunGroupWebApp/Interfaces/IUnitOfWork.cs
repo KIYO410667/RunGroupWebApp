@@ -1,4 +1,6 @@
-﻿namespace RunGroupWebApp.Interfaces
+﻿using RunGroupWebApp.Interfaces.IReposiotry;
+
+namespace RunGroupWebApp.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
