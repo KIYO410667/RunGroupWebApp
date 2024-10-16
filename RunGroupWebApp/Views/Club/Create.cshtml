@@ -42,16 +42,16 @@
                     </div>
 
                     <div class="mb-3">
+                        <label asp-for="Capacity" class="form-label">人數</label>
+                        <input asp-for="Capacity" class="form-control" placeholder="輸入可參加人數" required></input>
+                        <span asp-validation-for="Capacity" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
                         <label asp-for="Image" class="form-label">圖片上傳</label>
                         <input asp-for="Image" type="file" class="form-control" id="imageUpload" accept="image/*" required>
                         <span asp-validation-for="Image" class="text-danger"></span>
                         <img id="imagePreview" src="#" alt="圖片預覽" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Address.Street" class="form-label">地址</label>
-                        <input asp-for="Address.Street" class="form-control" placeholder="輸入街道名稱" required>
-                        <span asp-validation-for="Address.Street" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
@@ -61,6 +61,14 @@
                         </select>
                         <span asp-validation-for="Address.City" class="text-danger"></span>
                     </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Address.Street" class="form-label">地址</label>
+                        <input asp-for="Address.Street" class="form-control" placeholder="輸入街道名稱" required>
+                        <span asp-validation-for="Address.Street" class="text-danger"></span>
+                    </div>
+
+                    
 
                     <div class="text-center mt-4">
                         <button class="btn btn-primary btn-submit" type="submit">建立活動</button>

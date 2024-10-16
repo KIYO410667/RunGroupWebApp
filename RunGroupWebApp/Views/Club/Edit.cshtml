@@ -45,17 +45,16 @@
                     </div>
 
                     <div class="mb-3">
+                        <label asp-for="Capacity" class="form-label">人數</label>
+                        <input asp-for="Capacity" class="form-control" placeholder="輸入可參加人數" required></input>
+                        <span asp-validation-for="Capacity" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
                         <label asp-for="Image">圖片上傳</label><br />
                         <input asp-for="Image" type="file" class="form-control">
                         <span asp-validation-for="Image" class="text-danger"></span>
                     </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Address.Street">地址</label>
-                        <input asp-for="Address.Street" class="form-control" placeholder="西屯路二段" required>
-                        <span asp-validation-for="Address.Street" class="text-danger"></span>
-                    </div>
-
 
                     <div class="col-md-5 mb-3">
                         <label asp-for="Address.City">縣市</label>
@@ -66,6 +65,11 @@
                         <span asp-validation-for="Address.City" class="text-danger"></span>
                     </div>
 
+                    <div class="mb-3">
+                        <label asp-for="Address.Street">地址</label>
+                        <input asp-for="Address.Street" class="form-control" placeholder="西屯路二段" required>
+                        <span asp-validation-for="Address.Street" class="text-danger"></span>
+                    </div>
 
                     <hr class="mb-4">
                     <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
