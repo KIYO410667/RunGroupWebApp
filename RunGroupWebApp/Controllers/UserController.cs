@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RunGroupWebApp.Interfaces;
+using RunGroupWebApp.Interfaces.IReposiotry;
+using RunGroupWebApp.Interfaces.IService;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
 
@@ -7,12 +8,12 @@ namespace RunGroupWebApp.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserRepository userRepository, ILogger<UserController> logger)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
-            _userRepository = userRepository;
+            _userService = userService;
             _logger = logger;
         }
 
@@ -21,9 +22,7 @@ namespace RunGroupWebApp.Controllers
         {
             try
             {
-                _logger.LogInformation("Fetching all users");
-                var results = await _userRepository.GetAllUser();
-                _logger.LogInformation($"Retrieved {results.Count()} users");
+                var results = await _userService.GetAllUsers();
                 return View(results);
             }
             catch (Exception ex)
@@ -37,14 +36,12 @@ namespace RunGroupWebApp.Controllers
         {
             try
             {
-                _logger.LogInformation($"Fetching details for user with ID: {id}");
-                var result = await _userRepository.GetUserSummaryById(id);
+                var result = await _userService.GetUserSummaryById(id);
                 if (result == null)
                 {
                     _logger.LogWarning($"User with ID {id} not found");
                     return View("Error");
                 }
-                _logger.LogInformation($"Returning detail view for user {id}");
                 return View(result);
             }
             catch (Exception ex)

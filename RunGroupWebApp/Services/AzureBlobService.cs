@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Microsoft.Extensions.Options;
 using RunGroupWebApp.Helpers;
-using RunGroupWebApp.Interfaces;
+using RunGroupWebApp.Interfaces.IService;
 
 namespace RunGroupWebApp.Services
 {

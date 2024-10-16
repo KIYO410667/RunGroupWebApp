@@ -1,4 +1,4 @@
-﻿namespace RunGroupWebApp.Interfaces
+﻿namespace RunGroupWebApp.Interfaces.IService
 {
     public interface IAzureBlobService
     {
