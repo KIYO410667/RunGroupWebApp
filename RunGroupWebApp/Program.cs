@@ -9,6 +9,8 @@ using RunGroopWebApp.Data;
 using RunGroupWebApp.Data;
 using RunGroupWebApp.Helpers;
 using RunGroupWebApp.Interfaces;
+using RunGroupWebApp.Interfaces.IReposiotry;
+using RunGroupWebApp.Interfaces.IService;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.Repository;
 using RunGroupWebApp.Services;
@@ -29,6 +31,14 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppUserClubRepository, AppUserClubRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IClubService, ClubService>();
+builder.Services.AddScoped<IAppUserClubService, AppUserClubService>();
 
 builder.Configuration.AddUserSecrets<Program>();
 builder.Services.Configure<AzureStorageConfig>(builder.Configuration.GetSection("AzureStorageConfig"));
@@ -46,9 +56,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             )
     );
 });
-
-
-builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
