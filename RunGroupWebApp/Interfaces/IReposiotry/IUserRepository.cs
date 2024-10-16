@@ -1,15 +1,13 @@
 ﻿using RunGroupWebApp.Models;
+using RunGroupWebApp.Repository;
 using RunGroupWebApp.ViewModels;
 
-namespace RunGroupWebApp.Interfaces
+namespace RunGroupWebApp.Interfaces.IReposiotry
 {
-    public interface IUserRepository
+    public interface IUserRepository : IGenericRepository<AppUser>
     {
         Task<List<UserViewModel>> GetAllUser();
         Task<UserViewModel> GetUserSummaryById(string id);
         Task<List<Club>> GetClubsByUserId(string userId);
-        void Add(AppUser user);
-        void Delete(AppUser user);
-        void Update(AppUser user);
     }
 }

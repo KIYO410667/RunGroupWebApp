@@ -1,33 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RunGroupWebApp.Data;
 using RunGroupWebApp.Data.Enum;
-using RunGroupWebApp.Interfaces;
+using RunGroupWebApp.Interfaces.IReposiotry;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
 
 namespace RunGroupWebApp.Repository
 {
-    public class ClubRepository : IClubRepository
+    public class ClubRepository : GenericRepository<Club>, IClubRepository 
     {
-        private readonly ApplicationDbContext _context;
+        public ClubRepository(ApplicationDbContext context) : base(context) { }
 
-        public ClubRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public void Add(Club club)
-        {
-            _context.Clubs.Add(club);
-        }
-        public void Delete(Club club)
-        {
-            _context.Clubs.Remove(club);
-        }
-        public void Update(Club club)
-        {
-            _context.Update(club);
-        }
         public async Task<IEnumerable<Club>> GetAll()
         {
             return await _context.Clubs.Include(a => a.AppUser).ToListAsync();

@@ -1,14 +1,11 @@
 ﻿using RunGroupWebApp.Models;
 
-namespace RunGroupWebApp.Interfaces
+namespace RunGroupWebApp.Interfaces.IReposiotry
 {
-    public interface IAppUserClubRepository
+    public interface IAppUserClubRepository : IGenericRepository<AppUserClub>
     {
         Task<List<Club>> GetAllClubs();
         Task<AppUserClub> GetByIdAsync(int clubId);
         Task<List<AppUser>> GetAllUsers(int clubId);
-
-        void Add(AppUserClub userClub);
-        void Delete(AppUserClub userClub);
     }
 }

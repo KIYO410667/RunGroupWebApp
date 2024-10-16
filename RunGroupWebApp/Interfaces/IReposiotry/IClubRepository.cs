@@ -2,11 +2,10 @@
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
 
-namespace RunGroupWebApp.Interfaces
+namespace RunGroupWebApp.Interfaces.IReposiotry
 {
-    public interface IClubRepository
+    public interface IClubRepository : IGenericRepository<Club>
     {
-
         Task<IEnumerable<Club>> GetAll();
         Task<Club> GetById(int id);
         Task<Club> GetClubWithAppUserById(int id);
@@ -19,8 +18,5 @@ namespace RunGroupWebApp.Interfaces
         Task<int> GetSearchResultsCountAsync(string keyword, ClubCategory? category, City? city);
         Task<IEnumerable<Club>> GetAllClubsByCity(string city);
         Task<List<Club>> GetClubsByUserId(string userId);
-        void Add(Club club);
-        void Update(Club club);
-        void Delete(Club club);
     }
 }
