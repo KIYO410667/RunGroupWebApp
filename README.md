@@ -19,6 +19,12 @@ This is a web application built using ASP.NET Core MVC. The project follows the 
 - Deployment: Azure App Service
 - Authenticaton: Cookie & Session, OAuth2
 - Other Tools: Entity Framework Core, Bootstrap
+
+## Class Diagram
+### Abbreviate Implemation of Services, UnitOfWork, Repositories(Include Generic Repository) and ViewModels.
+### Architecture: View ⇆ ViewModel ⇆ Controller ⇆ Service ⇆ UnitOfWork ⇆ Repository ⇆ Model
+![Class Diagram](https://github.com/user-attachments/assets/fa3325c2-6ca4-4777-b03c-657aa399573a)
+
 ## Use Case Diagram
 ![Class Diagram drawio](https://github.com/user-attachments/assets/c2b06da2-11d7-41d2-9302-f2902a1088b0)
 
