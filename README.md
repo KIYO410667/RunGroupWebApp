@@ -29,7 +29,8 @@ This is a web application built using ASP.NET Core MVC. The project follows the 
 ![Class Diagram drawio](https://github.com/user-attachments/assets/c2b06da2-11d7-41d2-9302-f2902a1088b0)
 
 ## ER Diagram
-![RunGroupsERmodel drawio](https://github.com/user-attachments/assets/705310e8-a9a7-4b46-b90d-98253183a43c)
+![RunGroupsERmodel](https://github.com/user-attachments/assets/6ee9c0c2-04e7-454b-b46a-c30d0ac83ba6)
+
 
 ## Screenshots
 ### Login Page : Include regular signin / Login functionality and Google Login
